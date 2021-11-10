@@ -18,6 +18,23 @@ class PasienController extends Controller
                 ( SELECT kunjunganke  from kunjungan_t WHERE id_pasien = ps.id ORDER BY kunjunganke desc limit 1),
                 ( SELECT hpht  from kehamilansaatini_t WHERE id_pasien = ps.id ORDER BY created_at desc limit 1 )
             ");
+            // SELECT pr.*, ps.* from pasienregistrasi_t as pr
+            // join pasien_m as ps on ps.id = pr.id_pasien
+
+        if(isset($req->nama)){
+            $data = $data->whereRaw("LOWER(ps.nama) like '%".$req->nama."%'");
+        }        
+        
+        if(isset($req->nobuku)){
+            $data = $data->whereRaw(" LOWER(ps.nobuku) like '%".$req->nobuku."%'");
+        }
+        $data = $data->limit(30)->orderBy("ps.nama")->get();
+        
+        return response()->json($data);
+    }
+    public function getDataPasienRev(Request $req)
+    {
+        $data = DB::table('pasien_m as ps')->where("aktif","1");
 
         if(isset($req->nama)){
             $data = $data->whereRaw("LOWER(ps.nama) like '%".$req->nama."%'");

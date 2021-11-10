@@ -40,8 +40,13 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
                 // return  Auth::user()->currentAccessToken();
         });
         
+        // PASIEN REGISTRASI
+        Route::post("/saveRegistrasiPasien","Pasien\RegistrasiController@saveRegistrasiPasien");
+        Route::get("/daftarRegistrasiPasien","Pasien\RegistrasiController@daftarRegistrasiPasien");
+
         // PASIEN 
         Route::get("/getDataPasien","Pasien\PasienController@getDataPasien");
+        Route::get("/getDataPasienRev","Pasien\PasienController@getDataPasienRev");
         Route::post("/saveDataPasien","Pasien\PasienController@saveDataPasien");
         
         Route::get("logout","User\UserController@logout");
