@@ -29,6 +29,7 @@ class KehamilanController extends Controller
         $save->aktif = 1;
         $save->kunjunganke = 0;
         $save->id_pasien = $id_pasien;
+        $save->id_unitkerja =  \Auth::user()->id_unitkerja;
         $save->id_pegawai = \Auth::user()->id_pegawai;
         $save->save();
 
@@ -64,6 +65,7 @@ class KehamilanController extends Controller
             $save->riwayatpenyakit = $req->riwayatpenyakit;
             $save->riwayatalergi = $req->riwayatalergi;
             $save->tetanustrakhir = $req->tetanustrakhir;
+            // $save->id_unitkerja = \Auth::user()->id_unitkerja;
             $save->g = $req->g;
             $save->p = $req->p;
             $save->o = $req->o;
@@ -74,7 +76,7 @@ class KehamilanController extends Controller
             $status = $save ? 1:0;
             $err = "";
 
-            if(!$req->hpht || $req->hpht ==null || $req->hpht==""){
+            if(!$req->hpht || $req->hpht ==null || $req->hpht=="" || $req->hpht=="null"){
                 $id_kehamilan = $save->id;
                 
                 Rujukan::where("id_kehamilansaatini",$id_kehamilan)->delete();
@@ -87,6 +89,7 @@ class KehamilanController extends Controller
                     "id"=>MasterController::Random(),
                     "aktif"=>1,
                     "hasrujuk"=>0,
+                    "status"=>"request",
                     "id_kunjungan"=>$id_kunjungan
                     // "id_kehamilansaatini" => $save->id
                 ]);
@@ -132,8 +135,7 @@ class KehamilanController extends Controller
 // SIMPAN JADWAL KUNJUNGAN ================================================================================================================
 
 
-            DB::commit();
-
+        DB::commit();
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -145,7 +147,8 @@ class KehamilanController extends Controller
             "msg"=> $status ==0 ? "Gagal simpan data...".$err :"Suksess .",
             "sts" =>$status,
             "id_pasien" =>$req->id_pasien,
-            "lastinsertid" => $save->id
+            "lastinsertid" => $save->id,
+            "hpht" => $req->hpht,
         ]);
     }
 

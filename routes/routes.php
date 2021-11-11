@@ -9,6 +9,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::get("/userDetail","User\UserController@userDetail");
         Route::post("/simpanUserBaru","User\UserController@simpanUserBaru");
         Route::get("/hapusUser","User\UserController@hapusUser");
+
+        // KEHAMILAN SAAT INI
         Route::post("/simpanDataKehamilanSaatIni","Pasien\KehamilanController@simpanDataKehamilanSaatIni");
         Route::get("/getDataKehamilanSaatIni","Pasien\KehamilanController@getDataKehamilanSaatIni");
 
@@ -27,6 +29,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::get("/getPasienRujuk","Rujukan\RujukanController@getPasienRujuk");
         Route::get("/detailPasienRujuk","Rujukan\RujukanController@detailPasienRujuk");
         Route::get("/tidakPerluDiRujuk/{id}","Rujukan\RujukanController@tidakPerluDiRujuk");
+        Route::get("/updateStatusPasienRujuk/{id}/{status}","Rujukan\RujukanController@updateStatusPasienRujuk");
         
         
         

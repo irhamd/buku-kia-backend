@@ -171,7 +171,7 @@ class RujukanController extends Controller
 
 
         $data = DB::select("
-                select  psr.id, ps.id as id_pasien,ps.nama,ps.nobuku,uk.unitkerja,
+                select  psr.id, ps.id as id_pasien,ps.nama,ps.nobuku,uk.unitkerja,psr.status,
                 ps.alamat ,psr.id_kunjungan,kjt.kunjunganke, kjt.umurkehamilan1, kjt.created_at,ps.nohp,
                 ps.foto from pasienrujuk_t as psr 
                 join kunjungan_t as kjt on kjt.id = psr.id_kunjungan 
@@ -225,6 +225,15 @@ class RujukanController extends Controller
        $cek = Rujukan::find($id)->update(["aktif"=>0]);
         return response()->json([
             "cek"=>$cek ? 1:0,
+        ]);
+
+    }
+
+    public function updateStatusPasienRujuk($id, $status)
+    {
+       $cek = Rujukan::find($id)->update(["status"=>$status]);
+        return response()->json([
+            "sts"=>$cek ? 1:0,
         ]);
 
     }

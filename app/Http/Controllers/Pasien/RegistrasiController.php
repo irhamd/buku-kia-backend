@@ -23,6 +23,7 @@ class RegistrasiController extends Controller
 
             $cekAda = Registrasi::select("id_pasien")
             ->where("id_pasien", $req['id_pasien'])
+            ->where("id_unitkerja", $req['id_unitkerja'])
             ->where("tanggal","like","%$tgl%")
             ->count();
 
@@ -72,16 +73,17 @@ class RegistrasiController extends Controller
 
     public function daftarRegistrasiPasien(Request $req)
     {
-        $tglAkhir = $req['tglAkhir'];
-        $tglAwal = $req['tglAwal'];
+        $tglAkhir = substr($req['tglAkhir'], 0, 11);
+        $tglAwal = substr($req['tglAwal'], 0, 11);
+        // $tglAwal = $req['tglAwal'];
         
         $data = DB::table('pasienregistrasi_t as pr')
         ->join("pasien_m  as ps","ps.id","pr.id_pasien")
         ->select("pr.id as id_pr", "pr.aktif" , "pr.tanggal", "pr.nokunjungan", "pr.id_pasien", "pr.kunjunganke", "pr.statuskeluar", 
             "ps.nama", "ps.alamat", "ps.foto", "ps.nobuku", "ps.nik", "ps.tgllahir")
         ->where("pr.aktif","1")
-        ->where("ps.aktif","1");
-        // ->whereRaw("pr.tanggal between '$tglAwal' and '$tglAkhir'");
+        ->where("ps.aktif","1")
+        ->whereRaw("pr.tanggal between '$tglAwal 00:00:00' and '$tglAkhir 23:59:59'");
         
         if(isset($req->nama)){
             $data = $data->whereRaw("LOWER(ps.nama) like '%".$req->nama."%'");
