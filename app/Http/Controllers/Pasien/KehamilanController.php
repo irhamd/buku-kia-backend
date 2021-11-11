@@ -13,6 +13,7 @@ use DB;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\Rujukan\RujukanController;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 
 class KehamilanController extends Controller
@@ -92,6 +93,8 @@ class KehamilanController extends Controller
             }
 
 // SIMPAN JADWAL KUNJUNGAN ================================================================================================================
+            $kunjunganawal = Carbon::parse(date('Y-m-d'));
+                        
             DB::table('jadwalkunjungan_t')->where('id_pasien','=',$req->id_pasien)->delete();
 
             DB::table("jadwalkunjungan_t")->insert([
