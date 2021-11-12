@@ -63,7 +63,7 @@ class UserController extends Controller
         $pegawai = DB::table('pegawai_m as pg')
             ->join("unitkerja_m as un","un.id","=","pg.id_unitkerja")  
             ->join("users as uss","uss.id_pegawai","=","pg.id")   
-            ->select("pg.*","un.unitkerja")   
+            ->select("pg.*","un.unitkerja","un.kodefirebase")   
             ->where("uss.id",$user->id)
             ->first();
 
