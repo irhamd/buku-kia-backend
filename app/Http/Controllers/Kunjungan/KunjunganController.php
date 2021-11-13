@@ -94,28 +94,30 @@ class KunjunganController extends Controller
     public function saveKunjungan( Request $req )
     {
         try {
-            $newId = MasterController::Random();
-
-            $cek = DB::table('kunjungan_t')->where("id_pasien","=",$req->id_pasien)
-                ->where("kunjunganke","=","0")
-                ->first();
-
+            
+            // $cek = DB::table('kunjungan_t')->where("id_pasien","=",$req->id_pasien)
+            // ->where("kunjunganke","=","0")
+            // ->first();
+            
             DB::beginTransaction();
-            if( !$cek){
+            $newId = "";
+
+            if( $req->id == ""){
+                $newId = MasterController::Random();
                 $save = new KunjunganPasien();
                 $save->id = $newId;
                 $save->aktif = 1;
             }else{
-                $newId = $cek->id;
+                $newId = $req->id;
                 $save = KunjunganPasien::find($newId);
                 // DB::table("listkeluhan_t")->where("id_kunjungan","=",$req->id)->delete();
                 // DB::table("listhasillab_t")->where("id_kunjungan","=",$req->id)->delete();
             }
             // id	aktif	tanggal	umurkehamilan	beratbadan	tekanandarah	tinggifundus	imunisasi	tablettambahdarah	analisa	created_at	updated_at
             
-            $umurK = KehamilanController::getUmurKehamilan($req->id_pasien, $req->tanggal);
+            // $umurK = KehamilanController::getUmurKehamilan($req->id_pasien, $req->tanggal);
 
-            $save->umurkehamilan =  $umurK[0];
+            // $save->umurkehamilan =  $umurK[0];
             $save->umurkehamilan1 =  $req->umurkehamilan1;
 
             $save->tanggal = $req->tanggal;
@@ -124,6 +126,7 @@ class KunjunganController extends Controller
             $save->tinggifundus = $req->tinggifundus;
             $save->imunisasi = $req->imunisasi;
             $save->analisa = $req->analisa;
+            $save->id_pasienregistrasi = $req->id_pasienregistrasi;
             $save->id_letakjanin = $req->letakjanin;
             $save->tablettambahdarah = $req->tablettambahdarah;
             $save->id_pasien = $req->id_pasien;
@@ -131,6 +134,17 @@ class KunjunganController extends Controller
             $save->lila = $req->lila;
             $save->tatalaksana = $req->tatalaksana;
             $save->masukpanggul = $req->masukpanggul;
+            $save->vaksin1 = $req->vaksin1;
+            $save->vaksin2 = $req->vaksin2;
+            $save->vaksin3 = $req->vaksin3;
+            
+            $save->timbang = $req->timbang;
+            $save->linkarlengan = $req->linkarlengan;
+            $save->tinggirahim = $req->tinggirahim;
+            $save->skreningdokter = $req->skreningdokter;
+            $save->ppia = $req->ppia;
+
+            
             $save->beratjanin = $req->beratjanin;
             $save->konseling = $req->konseling;
             $save->id_pegawai = \Auth::user()->id_pegawai;
@@ -189,7 +203,7 @@ class KunjunganController extends Controller
             "sts" =>$status,
             "id_kunjungan" =>$newId,
             // "cekrujuk" =>$cekRujuk,
-            "umur" => $umurK,
+            // "umur" => $umurK,
             // "keluhan" =>$keluhan,
             // "hasillab" =>$hasillab,
         ]);

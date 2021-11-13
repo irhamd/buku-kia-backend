@@ -40,21 +40,29 @@ class EvaluasiKesehatanController extends Controller
                 $save->aktif = 1;
             }else{
                 $save = EvaluasiKesehatanIbu::find($req->id);
+                // DB::table("riwayatkehamilanpersalinan_t")->where("id_evaluasikesehatanibu",$req->id )
+                // ->update([
+                //     "aktif"=>"0",
+                // ]);
             }
+
             $save->tanggal = $req->tanggal;
             $save->id_pasien = $req->id_pasien;
             $save->kunjunganke = $req->kunjunganke;
             $save->id_pasienregistrasi = $req->id_pasienregistrasi;
-            $save->riwayatkehamilandanpersalinan_lainnya = $req->riwayatkehamilandanpersalinan_lainnya;
-            $save->riwayatpenyakitkeluarga = implode(",", $req->riwayatpenyakitkeluarga );
+            // $save->riwayatkehamilandanpersalinan_lainnya = $req->riwayatkehamilandanpersalinan_lainnya;
+            // $save->riwayatpenyakitkeluarga = implode(",", $req->riwayatpenyakitkeluarga );
+            $save->riwayatpenyakitkeluarga =  $req->riwayatpenyakitkeluarga ? implode(",", $req->riwayatpenyakitkeluarga ) :""; 
+            
             $save->riwayatpenyakitkeluarga_lainnya = $req->riwayatpenyakitkeluarga_lainnya;
             $save->tb = $req->tb;
             $save->bb = $req->bb;
             $save->lila = $req->lila;
-            $save->riwayatkesehatanibuskarang =  implode(",", $req->riwayatkesehatanibuskarang );
+            $save->riwayatkesehatanibuskarang =  $req->riwayatkesehatanibuskarang ? implode(",", $req->riwayatkesehatanibuskarang ) :"";
             $save->riwayatkesehatanibuskarang_lainnya = $req->riwayatkesehatanibuskarang_lainnya;
-            $save->statusimunisasi_checked =  implode(",", $req->statusimunisasi_checked );
-            $save->riwayatprilaku_checked =   implode(",", $req->riwayatprilaku_checked );
+            $save->statusimunisasi_checked =  $req->statusimunisasi_checked ? implode(",", $req->statusimunisasi_checked ) :""; 
+            $save->riwayatprilaku_checked =  $req->riwayatprilaku_checked ? implode(",", $req->riwayatprilaku_checked ) :""; 
+            // $save->riwayatprilaku_checked =   implode(",", $req->riwayatprilaku_checked );
             $save->riwayatprilaku_lain = $req->riwayatprilaku_lain;
             $save->inspeksiinspekulo = $req->inspeksiinspekulo;
             $save->vulva = $req->vulva;
@@ -99,7 +107,7 @@ class EvaluasiKesehatanController extends Controller
         return response()->json([
             "msg"=> $status ==0 ? "Gagal simpan data...".$err :"Suksess .",
             "sts" =>$status,
-            "id_kunjungan" =>$newId,
+            "id_evaluasi" =>$newId,
         ]);
     } 
 

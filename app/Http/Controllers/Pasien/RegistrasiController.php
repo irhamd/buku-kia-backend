@@ -73,6 +73,8 @@ class RegistrasiController extends Controller
 
     public function daftarRegistrasiPasien(Request $req)
     {
+        $un = \Auth::user()->id_unitkerja;
+        
         $tglAkhir = substr($req['tglAkhir'], 0, 11);
         $tglAwal = substr($req['tglAwal'], 0, 11);
         // $tglAwal = $req['tglAwal'];
@@ -83,6 +85,7 @@ class RegistrasiController extends Controller
             "ps.nama", "ps.alamat", "ps.foto", "ps.nobuku", "ps.nik", "ps.tgllahir")
         ->where("pr.aktif","1")
         ->where("ps.aktif","1")
+        ->where("pr.id_unitkerja",$un)
         ->whereRaw("pr.tanggal between '$tglAwal 00:00:00' and '$tglAkhir 23:59:59'");
         
         if(isset($req->nama)){

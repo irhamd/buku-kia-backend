@@ -169,17 +169,22 @@ class RujukanController extends Controller
             $rujuk = " and psr.hasrujuk = '".$req->rujuk."'";
         }
 
+        $un = \Auth::user()->id_unitkerja;
 
         $data = DB::select("
-                select  psr.id, ps.id as id_pasien,ps.nama,ps.nobuku,uk.unitkerja,psr.status,
+                select  psr.id, ps.id as id_pasien,ps.nama,ps.nobuku,psr.status, pr.id_unitkerja,
                 ps.alamat ,psr.id_kunjungan,kjt.kunjunganke, kjt.umurkehamilan1, kjt.created_at,ps.nohp,
                 ps.foto from pasienrujuk_t as psr 
                 join kunjungan_t as kjt on kjt.id = psr.id_kunjungan 
+
                 join pasien_m as ps on ps.id = kjt.id_pasien 
-                join unitkerja_m as uk on uk.id= kjt.id_unitkerja
+                join pasienregistrasi_t as pr on pr.id = kjt.id_pasienregistrasi
                 
                 where psr.aktif ='1'
+                and pr.id_unitkerja = $un
+
                 ".$rujuk."
+                order by psr.id
         ");
 
         $datas = [];
@@ -231,12 +236,41 @@ class RujukanController extends Controller
 
     public function updateStatusPasienRujuk($id, $status)
     {
-       $cek = Rujukan::find($id)->update(["status"=>$status]);
+       $cek = Rujukan::find($id)->update([
+           "status"=>$status,
+           "hasrujuk"=>$status == 'commit' ? '1' : '0',
+        ]);
         return response()->json([
             "sts"=>$cek ? 1:0,
         ]);
 
     }
+
+    public function getPasienRujukRS(Request $req)
+    {
+        $data = DB::select("
+                select  psr.id, ps.id as id_pasien,ps.nama,ps.nobuku,psr.status,
+                ps.alamat ,psr.id_kunjungan,kjt.kunjunganke, kjt.umurkehamilan1, psr.created_at,ps.nohp,
+                ps.foto, pr.tanggal as tglregistrasi, uk.unitkerja as faskes
+                from pasienrujuk_t as psr 
+                join kunjungan_t as kjt on kjt.id = psr.id_kunjungan 
+                join pasien_m as ps on ps.id = kjt.id_pasien 
+                join pasienregistrasi_t as pr on pr.id = kjt.id_pasienregistrasi
+                join unitkerja_m as uk on uk.id = pr.id_unitkerja
+                
+                WHERE pr.aktif = '1'
+                and psr.aktif = '1'
+                and psr.status <> 'commit'
+                and psr.status <> 'ditolak'
+                order by psr.id
+        ");
+ 
+        return response()->json([
+            "data"=>$data,
+            "jlh" => count($data)
+        ]);
+    }
+
 
 
 }
