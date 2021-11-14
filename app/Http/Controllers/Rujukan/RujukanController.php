@@ -251,7 +251,7 @@ class RujukanController extends Controller
         $data = DB::select("
                 select  psr.id, ps.id as id_pasien,ps.nama,ps.nobuku,psr.status,
                 ps.alamat ,psr.id_kunjungan,kjt.kunjunganke, kjt.umurkehamilan1, psr.created_at,ps.nohp,
-                ps.foto, pr.tanggal as tglregistrasi, uk.unitkerja as faskes
+                ps.foto, pr.tanggal as tglregistrasi, uk.unitkerja as faskes, uk.kodefirebase
                 from pasienrujuk_t as psr 
                 join kunjungan_t as kjt on kjt.id = psr.id_kunjungan 
                 join pasien_m as ps on ps.id = kjt.id_pasien 

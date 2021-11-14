@@ -28,7 +28,7 @@ class PasienController extends Controller
         if(isset($req->nobuku)){
             $data = $data->whereRaw(" LOWER(ps.nobuku) like '%".$req->nobuku."%'");
         }
-        $data = $data->limit(30)->orderBy("ps.nama")->get();
+        $data = $data->limit(10)->orderBy("ps.nama")->get();
         
         return response()->json($data);
     }
@@ -43,7 +43,7 @@ class PasienController extends Controller
         if(isset($req->nobuku)){
             $data = $data->whereRaw(" LOWER(ps.nobuku) like '%".$req->nobuku."%'");
         }
-        $data = $data->limit(30)->orderBy("ps.nama")->get();
+        $data = $data->limit(10)->orderBy("ps.nama")->get();
         
         return response()->json($data);
     }

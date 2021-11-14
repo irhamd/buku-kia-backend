@@ -54,6 +54,29 @@ class MasterController extends Controller
         return response()->json($data);
     }
 
+    public  function nonaktifkan(Request $req)
+    {
+        $data =DB::table($req->masterData);
+
+        
+        if(isset($req->aktif) && $req->aktif !="" ){
+            $data = $data->where("aktif", $req->aktif);
+        } else{
+            $data = $data->where("aktif", true);
+
+        }
+    
+        if(isset($req->limit) && $req->limit != ""){
+            $data = $data->limit($req->limit);
+        }
+
+ 
+
+        $data= $data->orderBy("id")->get();
+
+        return response()->json($data);
+    }
+
     public static function Random()
     {
         $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

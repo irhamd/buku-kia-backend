@@ -32,6 +32,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::get("/updateStatusPasienRujuk/{id}/{status}","Rujukan\RujukanController@updateStatusPasienRujuk");
         Route::get("/getPasienRujukRS","Rujukan\RujukanController@getPasienRujukRS");
         
+        Route::post("/updateKeluhanRujuk","Rujukan\KeluhanController@updateKeluhanRujuk");
+        
         
         
         Route::post("/getMasterData","MasterController@getMasterData");
