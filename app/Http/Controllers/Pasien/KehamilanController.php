@@ -163,6 +163,7 @@ class KehamilanController extends Controller
                 $save->aktif = 1;
                 
             }else{
+                $newId = $req->id;
                 $save = PemriksaanDokter::find($req->id);
             }
 
@@ -210,9 +211,9 @@ class KehamilanController extends Controller
         }
 
         return response()->json([
-            "msg"=> $status ==0 ? "Gagal simpan data...".$err :"Suksess .",
+            "msg"=> $status ==0 ? "Gagal simpan data...". $err :"Suksess .",
             "sts" =>$status,
-            "lastinsertid" => $save->id
+            "lastinsertid" => $newId
         ]);
     }
 

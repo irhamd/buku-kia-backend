@@ -262,9 +262,10 @@ class KunjunganController extends Controller
     public function getKunjunganByPasien(Request $req)
     {
         $data = DB::table("kunjungan_t as kj")
+        ->join("pasienregistrasi_t as pr","pr.id","=","kj.id_pasienregistrasi")
         ->join("pegawai_m as pg","pg.id","=","kj.id_pegawai")
         ->join("unitkerja_m as uk","uk.id","=","pg.id_unitkerja")
-        ->select("kj.*", "pg.namapegawai","uk.unitkerja")
+        ->select("kj.*", "pg.namapegawai", "pr.kunjunganke as kunjke","uk.unitkerja")
         ->where("kj.id_pasien","=",$req->id_pasien)
         ->get();
 
