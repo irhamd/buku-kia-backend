@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::post("/PushPanikButton","Rujukan\RujukanController@PushPanikButton");
+
 Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::get("/getUser","User\UserController@getUser");
         Route::get("/listUser","User\UserController@listUser");
@@ -31,6 +33,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::get("/tidakPerluDiRujuk/{id}","Rujukan\RujukanController@tidakPerluDiRujuk");
         Route::get("/updateStatusPasienRujuk/{id}/{status}","Rujukan\RujukanController@updateStatusPasienRujuk");
         Route::get("/getPasienRujukRS","Rujukan\RujukanController@getPasienRujukRS");
+        
         
         Route::post("/updateKeluhanRujuk","Rujukan\KeluhanController@updateKeluhanRujuk");
         

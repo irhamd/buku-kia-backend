@@ -191,12 +191,16 @@ class KehamilanController extends Controller
             $status = $save ? 1:0;
             $err = "";
 
+            if(isset($req->id) && isset($req->id) !=""){
+                KehamilanSaatIni::where("id_pasien", $req->id_pasien)->update(["htp"=> $req->htp]);
+            }
+
             $fileusg = $req->file('fileusg'); 
     
             if ($fileusg)
             {
                 $ext = $fileusg->getClientOriginalExtension();
-                $namafile = "usg-bebeasss.".$ext;
+                $namafile = "usg-".$newId.".".$ext;
                 $upload = Storage::disk('local')->put('USG/'.$namafile,file_get_contents($fileusg));
             }
 

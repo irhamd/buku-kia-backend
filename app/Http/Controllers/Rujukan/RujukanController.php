@@ -271,6 +271,41 @@ class RujukanController extends Controller
         ]);
     }
 
+    public function PushPanikButton()
+    {
+        try {
+            DB::beginTransaction();
+            $newId = MasterController::Random();
+
+            
+                $save = new Rujukan();
+                $save->id = $newId;
+                $save->aktif = 1;
+           
+            // id	aktif	id_kunjungan	id_unitkerja	tanggalrujuk	keterangan	jenis	id_kehamilansaatini	created_at	updated_at
+        
+            $save->id_kunjungan = "ini tess aja";
+            // $save->id_unitkerja = $req->id_unitkerja; // id_unitkerja = TUJUAN RS RUJUKAN
+            // $save->tanggalrujuk = $req->tanggalrujuk;
+             
+            $save->save();
+            $status = $save ? 1:0;
+            $err = "";
+            
+            DB::commit();
+        } catch (\Exception $e) {
+            $status =0;
+            $err = "[".$e->getMessage()."]";
+            DB::rollBack();
+        }
+        
+        return response()->json([
+            "msg"=> $status ==0 ? "Gagal simpan data...".$err :"Suksess .",
+            "sts" =>$status
+        ]);
+    }
+
+
 
 
 }
