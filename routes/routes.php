@@ -18,6 +18,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 
         // PEMERIKSAAN DOKTER
         Route::post("/simpanPemeriksaanDokter","Pasien\KehamilanController@simpanPemeriksaanDokter");
+        
+        // TESTT
+        Route::post("/testUpload","Pasien\KehamilanController@testUpload");
+        Route::delete("/deleteUpload","Pasien\KehamilanController@deleteUpload");
 
         // KUNJUNGAN PASIEN
         Route::post("/saveKunjungan","Kunjungan\KunjunganController@saveKunjungan");

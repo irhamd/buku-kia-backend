@@ -221,6 +221,57 @@ class KehamilanController extends Controller
         ]);
     }
 
+
+    public function testUpload( Request $req )
+    {        
+        try {
+           
+            $newId = MasterController::Random();
+            $fileupload = $req->file('fileupload'); 
+    
+            if ($fileupload)
+            {
+                $ext = $fileupload->getClientOriginalExtension();
+                $namafile = $req->filename.".".$ext;
+                $upload = Storage::disk('local')->put('TES/'.$namafile,file_get_contents($fileupload));
+            }
+
+            $err = "";
+            $status =1;
+
+        } catch (\Exception $e) {
+            $status =0;
+            $err = "[".$e->getMessage()."]";
+        }
+
+        return response()->json([
+            "msg"=> $status ==0 ? "Gagal simpan data...". $err :"Suksess .",
+            "sts" =>$status,
+            // "lastinsertid" => $newId
+        ]);
+    }
+
+    public function deleteUpload( Request $req )
+    {        
+        try {
+                $namafile = "";
+                unlink(storage_path("app/TES/$req->filename"));
+           
+            $err = "";
+            $status =1;
+
+        } catch (\Exception $e) {
+            $status =0;
+            $err = "[".$e->getMessage()."]";
+        }
+
+        return response()->json([
+            "msg"=> $status ==0 ? "Gagal simpan data...". $err :"Suksess .",
+            "sts" =>$status,
+            "lastinsertid" => $req->filename
+        ]);
+    }
+
     public function getDataKehamilanSaatIni(Request $req)
     {
         $data =DB::table("kehamilansaatini_t as khm")
