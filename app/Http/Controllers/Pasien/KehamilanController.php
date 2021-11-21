@@ -231,9 +231,9 @@ class KehamilanController extends Controller
     
             if ($fileupload)
             {
-                $ext = $fileupload->getClientOriginalExtension();
-                $namafile = $req->filename.".".$ext;
-                $upload = Storage::disk('local')->put('TES/'.$namafile,file_get_contents($fileupload));
+                // $ext = $fileupload->getClientOriginalExtension();
+                $namafile = $req->filename;
+                $upload = Storage::disk('local')->put('Arsip/'.$namafile,file_get_contents($fileupload));
             }
 
             $err = "";
@@ -255,7 +255,7 @@ class KehamilanController extends Controller
     {        
         try {
                 $namafile = "";
-                unlink(storage_path("app/TES/$req->filename"));
+                unlink(storage_path("app/Arsip/$req->filename"));
            
             $err = "";
             $status =1;

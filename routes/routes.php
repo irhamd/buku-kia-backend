@@ -4,6 +4,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post("/PushPanikButton","Rujukan\RujukanController@PushPanikButton");
+Route::post("/testUpload","Pasien\TestController@testUpload");
+Route::get("/arsip-getBerkas","Pasien\TestController@getBerkas");
+Route::delete("/deleteUpload","Pasien\TestController@deleteUpload");
+Route::get("/downloadBerkas","Pasien\TestController@downloadBerkas");
+
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::get("/getUser","User\UserController@getUser");
@@ -20,8 +25,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::post("/simpanPemeriksaanDokter","Pasien\KehamilanController@simpanPemeriksaanDokter");
         
         // TESTT
-        Route::post("/testUpload","Pasien\KehamilanController@testUpload");
-        Route::delete("/deleteUpload","Pasien\KehamilanController@deleteUpload");
 
         // KUNJUNGAN PASIEN
         Route::post("/saveKunjungan","Kunjungan\KunjunganController@saveKunjungan");
