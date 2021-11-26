@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Model\Pasien;
 use App\Model\KehamilanSaatIni;
 use App\Model\EB\PasienEB;
+use App\Model\EB\PasienEmergency;
 use DB;
 use App\Http\Controllers\MasterController;
 
@@ -47,6 +48,40 @@ class EmergencyButtonController extends Controller
             $save->lokasiterakhir = $req['lokasiterakhir'];
             $save->uid = $req['uid'];
             $save->phone = $req['phone'];
+           
+            $save->save();
+
+            $status = $save ? 1:0;
+            $err = "";
+
+        } catch (\Exception $e) {
+            $status =0;
+            $err = "[".$e->getMessage()."]";
+        }
+    
+        return response()->json([
+            "msg"=> $status ==0 ? "Gagal simpan data...".$err :"Suksess .",
+            "sts" =>$status
+        ]);
+    }
+
+
+    public function requestEmergency( Request $req )
+    {
+        try {
+            $newId = MasterController::Random();
+           
+            $save = PasienEmergency::firstOrNew(['uid' =>  $req['uid']]);
+
+            $save->id = $newId;
+            $save->nama = $req['nama'];
+            $save->uid = $req['uid'];
+            // $save->jeniskelamin = $req['jeniskelamin'];
+            $save->lat = $req['lat'];
+            $save->long = $req['long'];
+            $save->uid = $req['uid'];
+            $save->phone = $req['phone'];
+            $save->status ='rq';
            
             $save->save();
 
