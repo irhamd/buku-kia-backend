@@ -5,9 +5,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::post("/PushPanikButton","Rujukan\RujukanController@PushPanikButton");
 Route::post("/testUpload","Pasien\TestController@testUpload");
+Route::post("/simpanDataBerkas","Pasien\TestController@simpanDataBerkas");
 Route::get("/arsip-getBerkas","Pasien\TestController@getBerkas");
+Route::get("/arsip-fileupload","Pasien\TestController@getfileupload");
 Route::delete("/deleteUpload","Pasien\TestController@deleteUpload");
 Route::get("/downloadBerkas","Pasien\TestController@downloadBerkas");
+Route::post("/getMasterData","MasterController@getMasterData");
+
+// EBBBB
+Route::post("/eb-savePasienNewEB","AmergencyButton\EmergencyButtonController@savePasienNewEB");
+
 
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
@@ -46,7 +53,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         
         
         
-        Route::post("/getMasterData","MasterController@getMasterData");
+        // Route::post("/getMasterData","MasterController@getMasterData");
         Route::get("/Random","MasterController@Random");
         Route::get("/make", function(){
                 // $data = csrf_token();
