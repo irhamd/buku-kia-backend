@@ -8,6 +8,7 @@ use App\Model\Pasien;
 use App\Model\KehamilanSaatIni;
 use App\Model\EB\PasienEB;
 use App\Model\EB\PasienEmergency;
+use App\Model\EB\RiwayatPasienEB;
 use DB;
 use App\Http\Controllers\MasterController;
 
@@ -42,12 +43,25 @@ class EmergencyButtonController extends Controller
             $save = PasienEB::firstOrNew(['phone' =>  $req['phone']]);
 
             $save->id = $newId;
+            $save->aktif = "1";
             $save->nama = $req['nama'];
             $save->alamat = $req['alamat'];
             $save->jeniskelamin = $req['jeniskelamin'];
             $save->lokasiterakhir = $req['lokasiterakhir'];
             $save->uid = $req['uid'];
             $save->phone = $req['phone'];
+           
+            $save->save();
+           
+            $save = RiwayatPasienEB::firstOrNew(['uid' =>  $req['uid']]);
+
+            $save->id = $newId;
+            $save->aktif = "1";
+            $save->uid = $req['uid'];
+            $save->phone = $req['phone'];
+            $save->lat = $req['lat'];
+            $save->long = $req['long'];
+            $save->status = $req['status'];
            
             $save->save();
 
