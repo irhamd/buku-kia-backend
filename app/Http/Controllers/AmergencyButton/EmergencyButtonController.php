@@ -43,19 +43,26 @@ class EmergencyButtonController extends Controller
         try {
             $newId = MasterController::Random();
            
-            $save = PasienEB::firstOrNew(['phone' =>  $req['phone']]);
+            if($req['status'] != "cl" ) { 
 
-            $save->id = $newId;
-            $save->aktif = "1";
-            $save->nama = $req['nama'];
-            $save->alamat = $req['alamat'];
-            $save->jeniskelamin = $req['jeniskelamin'];
-            $save->lokasiterakhir = $req['lokasiterakhir'];
-            $save->uid = $req['uid'];
-            $save->phone = $req['phone'];
-           
-            $save->save();
-           
+                $aktif = true;
+
+                if(isset($req->block) && isset($req->block) !=""){
+                   $aktif = false;
+                }
+
+                $save = PasienEB::firstOrNew(['phone' =>  $req['phone']]);
+                $save->id = $newId;
+                $save->aktif = $aktif;
+                $save->nama = $req['nama'];
+                $save->alamat = $req['alamat'];
+                $save->jeniskelamin = $req['jeniskelamin'];
+                $save->lokasiterakhir = $req['lokasiterakhir'];
+                $save->uid = $req['uid'];
+                $save->phone = $req['phone'];
+            
+                $save->save();
+            }
             $save = RiwayatPasienEB::firstOrNew(['uid' =>  $req['uid']]);
 
             $save->id = $newId;
@@ -65,6 +72,7 @@ class EmergencyButtonController extends Controller
             $save->lat = $req['lat'];
             $save->long = $req['long'];
             $save->status = $req['status'];
+            $save->alasan = $req['alasan'];
 
             $tgltime = date('Y-m-d H:i:s');
 
@@ -147,19 +155,6 @@ class EmergencyButtonController extends Controller
    
     public function getRiwayatLengkapPasien(Request $req)
     {
-        // $data =  DB::select("
-        //     SELECT  
-        //         ebr.created_at, ebr.id, ebr.uid, ebr.lat, ebr.long, ebr.phone, ebr.isambulance, ebr.id_user, ebr.waktu_tekan, ebr.waktu_fu,ebr.waktu_commit,
-        //         ps.nama, ps.alamat, ps.jeniskelamin, ps.id_kecamatan,
-        //         st.status, st.kode
-        //     from eb_riwayatpasien_t as ebr
-        //     LEFT JOIN eb_pasien_m as ps on ps.phone = ebr.phone
-        //     join eb_status_m as st on st.kode = ebr.status
-        //     WHERE ebr.aktif = '1'
-        //     ORDER BY ebr.created_at desc
-        //     limit 50
-        // ");
-
         $data = DB::table("eb_riwayatpasien_t as ebr")
             ->select(
                 "ebr.created_at", "ebr.id", "ebr.uid", "ebr.lat", "ebr.long", "ebr.phone", "ebr.isambulance", "ebr.id_user", "ebr.waktu_tekan", "ebr.waktu_fu","ebr.waktu_commit",
@@ -168,6 +163,7 @@ class EmergencyButtonController extends Controller
             ->leftJoin("eb_pasien_m as ps","ps.phone","=","ebr.phone")
             ->join("eb_status_m as st","st.kode","=","ebr.status")
             ->where("ebr.aktif", "1")
+            ->whereIn("ebr.status", ["cm", "rj"])
             ->orderBy("ebr.created_at","desc")
             ->limit(50);
 
@@ -194,6 +190,28 @@ class EmergencyButtonController extends Controller
         return response()->json(
             [ 
                 "data"=> $data
+        ]);
+    }
+    public function cekDataPasienEB(Request $req)
+    {
+        $data = PasienEB::where("phone","like", "%$req->phone%")->first();
+
+        $riwayat = DB::table("eb_riwayatpasien_t as ebr")
+        ->select(
+            "ebr.created_at", "ebr.id", "ebr.uid", "ebr.lat", "ebr.long", "ebr.phone", "ebr.isambulance", "ebr.id_user", "ebr.waktu_tekan", "ebr.waktu_fu","ebr.waktu_commit",
+            "ps.nama", "ps.alamat", "ps.jeniskelamin", "ps.id_kecamatan",
+            "st.status", "st.kode")
+        ->leftJoin("eb_pasien_m as ps","ps.phone","=","ebr.phone")
+        ->join("eb_status_m as st","st.kode","=","ebr.status")
+        ->where("ebr.aktif", "1")
+        ->where("ebr.phone","like", "%$req->phone%")
+        ->whereIn("ebr.status", ["cm", "rj"])
+        ->orderBy("ebr.created_at","desc")
+        ->get();
+
+        return response()->json([
+            "data" => $data,
+            "riwayat" => $riwayat,
         ]);
     }
 
