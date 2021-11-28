@@ -14,6 +14,9 @@ Route::post("/getMasterData","MasterController@getMasterData");
 
 // EBBBB
 Route::post("/eb-savePasienNewEB","AmergencyButton\EmergencyButtonController@savePasienNewEB");
+Route::get("/eb-getDataDashboard","AmergencyButton\EmergencyButtonController@getDataDashboard");
+Route::get("/eb-getDataPasienEB","AmergencyButton\EmergencyButtonController@getDataPasienEB");
+Route::get("/eb-getRiwayatLengkapPasien","AmergencyButton\EmergencyButtonController@getRiwayatLengkapPasien");
 
 
 

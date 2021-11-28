@@ -15,18 +15,21 @@ use App\Http\Controllers\MasterController;
 class EmergencyButtonController extends Controller
 {
   
-    public function getDataPasienRev(Request $req)
+    public function getDataPasienEB(Request $req)
     {
-        $data = DB::table('pasien_m as ps')->where("aktif","1");
+        $data = DB::table('eb_pasien_m as ps');
 
         if(isset($req->nama)){
             $data = $data->whereRaw("LOWER(ps.nama) like '%".$req->nama."%'");
         }        
         
-        if(isset($req->nobuku)){
-            $data = $data->whereRaw(" LOWER(ps.nobuku) like '%".$req->nobuku."%'");
+        if(isset($req->alamat)){
+            $data = $data->whereRaw(" LOWER(ps.alamat) like '%".$req->alamat."%'");
         }
-        $data = $data->limit(10)->orderBy("ps.nama")->get();
+        if(isset($req->phone)){
+            $data = $data->whereRaw(" LOWER(ps.phone) like '%".$req->phone."%'");
+        }
+        $data = $data->limit(100)->orderBy("ps.nama")->get();
         
         return response()->json($data);
     }
@@ -62,6 +65,7 @@ class EmergencyButtonController extends Controller
             $save->lat = $req['lat'];
             $save->long = $req['long'];
             $save->status = $req['status'];
+            $save->isambulance = $req['isambulance'];
            
             $save->save();
 
@@ -113,7 +117,77 @@ class EmergencyButtonController extends Controller
         ]);
     }
 
- 
+    public function getDataDashboard(Request $req)
+    {
+        $data =  RiwayatPasienEB::select('status', DB::raw('count(status) as total'))
+                    ->groupBy('status')
+                    ->where("aktif", "1")
+                    ->whereIn("status", ["cm", "rj"])
+                    ->get();
+
+        $ambulance = RiwayatPasienEB::where("isambulance","1")->where("aktif", "1")->count();
+        $pasienanulir = PasienEB::where("aktif", "0")->count();
+        
+        return response()->json(
+            [ 
+                "data"=> $data, 
+                "ambulance"=> $ambulance,
+                "pasienanulir"=> $pasienanulir,
+        ]);
+    }
+
+   
+    public function getRiwayatLengkapPasien(Request $req)
+    {
+        // $data =  DB::select("
+        //     SELECT  
+        //         ebr.created_at, ebr.id, ebr.uid, ebr.lat, ebr.long, ebr.phone, ebr.isambulance, ebr.id_user, ebr.waktu_tekan, ebr.waktu_fu,ebr.waktu_commit,
+        //         ps.nama, ps.alamat, ps.jeniskelamin, ps.id_kecamatan,
+        //         st.status, st.kode
+        //     from eb_riwayatpasien_t as ebr
+        //     LEFT JOIN eb_pasien_m as ps on ps.phone = ebr.phone
+        //     join eb_status_m as st on st.kode = ebr.status
+        //     WHERE ebr.aktif = '1'
+        //     ORDER BY ebr.created_at desc
+        //     limit 50
+        // ");
+
+        $data = DB::table("eb_riwayatpasien_t as ebr")
+            ->select(
+                "ebr.created_at", "ebr.id", "ebr.uid", "ebr.lat", "ebr.long", "ebr.phone", "ebr.isambulance", "ebr.id_user", "ebr.waktu_tekan", "ebr.waktu_fu","ebr.waktu_commit",
+                "ps.nama", "ps.alamat", "ps.jeniskelamin", "ps.id_kecamatan",
+                "st.status", "st.kode")
+            ->leftJoin("eb_pasien_m as ps","ps.phone","=","ebr.phone")
+            ->join("eb_status_m as st","st.kode","=","ebr.status")
+            ->where("ebr.aktif", "1")
+            ->orderBy("ebr.created_at","desc")
+            ->limit(50);
+
+        if(isset($req->nama) && isset($req->nama) !=""){
+            $data = $data->where("ps.nama","like","%$req->nama%");
+        }
+
+        if(isset($req->tolak) && isset($req->tolak) !=""){
+            $data = $data->orWhere("st.kode","rj");
+        }
+
+        if(isset($req->ambu) && isset($req->ambu) !=""){
+            $data = $data->orWhere("ebr.isambulance","1");
+        }
+
+        
+        if(isset($req->phone) && isset($req->phone) !=""){
+            $phone = (int)$req->phone;
+            $data = $data->where("ebr.phone","like","%$phone%");
+        }
+
+        $data = $data->get();
+
+        return response()->json(
+            [ 
+                "data"=> $data
+        ]);
+    }
 
    
     
