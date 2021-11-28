@@ -65,6 +65,14 @@ class EmergencyButtonController extends Controller
             $save->lat = $req['lat'];
             $save->long = $req['long'];
             $save->status = $req['status'];
+
+            $tgltime = date('Y-m-d H:i:s');
+
+            if($req['status'] == "cl" ) { $save->waktu_fu = $tgltime; }
+            if($req['status'] == "cm" ) { $save->waktu_commit = $tgltime;}
+            if($req['status'] == "rq" ) { $save->waktu_tekan = $tgltime;}
+            if($req['status'] == "rj" ) { $save->waktu_reject = $tgltime;}
+
             $save->isambulance = $req['isambulance'];
            
             $save->save();
