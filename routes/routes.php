@@ -18,6 +18,7 @@ Route::get("/eb-getDataDashboard","AmergencyButton\EmergencyButtonController@get
 Route::get("/eb-getDataPasienEB","AmergencyButton\EmergencyButtonController@getDataPasienEB");
 Route::get("/eb-getRiwayatLengkapPasien","AmergencyButton\EmergencyButtonController@getRiwayatLengkapPasien"); // table pasien daftar
 Route::get("/eb-cekDataPasienEB","AmergencyButton\EmergencyButtonController@cekDataPasienEB");
+Route::post("/eb-getWaktuTekan","AmergencyButton\EmergencyButtonController@getWaktuTekan");
 
 // Route::get("/eb2-riwayatButtonPasien","AmergencyButton\EmergencyButtonControllerDua@riwayatButtonPasien");
 Route::get("/eb2-mobile-cekPasienBlock","AmergencyButton\EmergencyButtonControllerDua@cekPasienBlock");

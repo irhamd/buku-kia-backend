@@ -73,15 +73,43 @@ class EmergencyButtonController extends Controller
             $save->long = $req['long'];
             $save->status = $req['status'];
             $save->alasan = $req['alasan'];
-
             $tgltime = date('Y-m-d H:i:s');
 
-            if($req['status'] == "cl" ) { $save->waktu_fu = $tgltime; }
             if($req['status'] == "cm" ) { $save->waktu_commit = $tgltime;}
-            if($req['status'] == "rq" ) { $save->waktu_tekan = $tgltime;}
             if($req['status'] == "rj" ) { $save->waktu_reject = $tgltime;}
 
             $save->isambulance = $req['isambulance'];
+           
+            $save->save();
+
+            $status = $save ? 1:0;
+            $err = "";
+
+        } catch (\Exception $e) {
+            $status =0;
+            $err = "[".$e->getMessage()."]";
+        }
+    
+        return response()->json([
+            "msg"=> $status ==0 ? "Gagal simpan data...".$err :"Suksess .",
+            "sts" =>$status
+        ]);
+    }
+    public function getWaktuTekan( Request $req )
+    {
+        try {
+            $newId = MasterController::Random();
+           
+            $save = RiwayatPasienEB::firstOrNew(['uid' =>  $req['uid']]);
+
+            $save->id = $newId;
+            $save->aktif = "1";
+            $save->uid = $req['uid'];
+            $save->phone = $req['phone'];
+            $save->status = "cl";
+            $save->waktu_tekan = $req->waktutekan;
+            $tgltime = date('Y-m-d H:i:s');
+            $save->waktu_fu = $tgltime; 
            
             $save->save();
 
@@ -167,20 +195,29 @@ class EmergencyButtonController extends Controller
             ->orderBy("ebr.created_at","desc")
             ->limit(150);
 
-        if(isset($req->nama) && isset($req->nama) !=""){
+            
+        if(isset($req->tglAwal) && $req->tglAwal !=""){
+            $data = $data->where("ebr.waktu_tekan",">=",$req->tglAwal);
+        }
+            
+        if(isset($req->tglAkhir) && $req->tglAkhir !=""){
+            $data = $data->where("ebr.waktu_tekan","<=",$req->tglAkhir);
+        }
+
+        if(isset($req->nama) && $req->nama !=""){
             $data = $data->where("ps.nama","like","%$req->nama%");
         }
 
-        if(isset($req->tolak) && isset($req->tolak) !=""){
-            $data = $data->orWhere("st.kode","rj");
+        if(isset($req->tolak) && $req->tolak =="true" ){
+            $data = $data->Where("st.kode","rj");
         }
 
-        if(isset($req->ambu) && isset($req->ambu) !=""){
-            $data = $data->orWhere("ebr.isambulance","1");
+        if(isset($req->ambu) && $req->ambu =="true"){
+            $data = $data->Where("ebr.isambulance","1");
         }
 
         
-        if(isset($req->phone) && isset($req->phone) !=""){
+        if(isset($req->phone) && $req->phone !=""){
             $phone = (int)$req->phone;
             $data = $data->where("ebr.phone","like","%$phone%");
         }
