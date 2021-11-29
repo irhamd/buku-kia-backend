@@ -141,7 +141,7 @@ class EmergencyButtonController extends Controller
                     ->whereIn("status", ["cm", "rj"])
                     ->get();
 
-        $ambulance = RiwayatPasienEB::where("isambulance","1")->where("aktif", "1")->count();
+        $ambulance = RiwayatPasienEB::where("isambulance","1")->count();
         $pasienanulir = PasienEB::where("aktif", "0")->count();
         
         return response()->json(

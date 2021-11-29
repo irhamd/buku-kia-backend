@@ -15,12 +15,11 @@ use App\Http\Controllers\MasterController;
 class EmergencyButtonControllerDua extends Controller
 {
   
-    public function getDataPasienEB(Request $req)
+    public function cekPasienBlock(Request $req)
     {
-        $data =  RiwayatPasienEB::where("aktif", "1")
+        $data =  PasienEB::where("aktif", "0")
                     ->where("phone","like","%$req->phone%")
-                    ->orderBy("created_at","desc")
-                    ->get();
+                    ->count();
         return response()->json($data);
     }
 
