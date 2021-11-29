@@ -165,7 +165,7 @@ class EmergencyButtonController extends Controller
             ->where("ebr.aktif", "1")
             ->whereIn("ebr.status", ["cm", "rj"])
             ->orderBy("ebr.created_at","desc")
-            ->limit(50);
+            ->limit(150);
 
         if(isset($req->nama) && isset($req->nama) !=""){
             $data = $data->where("ps.nama","like","%$req->nama%");
