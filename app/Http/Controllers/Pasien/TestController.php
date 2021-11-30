@@ -77,8 +77,8 @@ class TestController extends Controller
             $dok->save();
             
             $err = "";
-            $status = 1;
             DB::commit();
+            $status = 1;
 
         } catch (\Exception $e) {
             DB::rollBack();
