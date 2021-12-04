@@ -6,11 +6,16 @@ use Illuminate\Support\Facades\Route;
 Route::post("/PushPanikButton","Rujukan\RujukanController@PushPanikButton");
 Route::post("/testUpload","Pasien\TestController@testUpload");
 Route::post("/simpanDataBerkas","Pasien\TestController@simpanDataBerkas");
-Route::get("/arsip-getBerkas","Pasien\TestController@getBerkas");
-Route::get("/arsip-fileupload","Pasien\TestController@getfileupload");
-Route::delete("/deleteUpload","Pasien\TestController@deleteUpload");
-Route::get("/downloadBerkas","Pasien\TestController@downloadBerkas");
+
+
+// ARSIP
+Route::get("/arsip-getBerkas","ArsipBerkas\ArsipBerkasController@getBerkas");
+Route::get("/arsip-fileupload","ArsipBerkas\ArsipBerkasController@getfileupload");
+Route::delete("/deleteUpload","ArsipBerkas\ArsipBerkasController@deleteUpload");
+Route::get("/downloadBerkas","ArsipBerkas\ArsipBerkasController@downloadBerkas");
 Route::post("/getMasterData","MasterController@getMasterData");
+Route::get("/arsip-showBerkasArsip","ArsipBerkas\ArsipBerkasController@showBerkasArsip");
+Route::get("/arsip-getdetailRegister","ArsipBerkas\ArsipBerkasController@getdetailRegister");
 
 // EBBBB
 Route::post("/eb-savePasienNewEB","AmergencyButton\EmergencyButtonController@savePasienNewEB");
