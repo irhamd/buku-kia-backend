@@ -96,14 +96,20 @@ class ArsipBerkasController extends Controller
     public function deleteUpload( Request $req )
     {        
         try {
-                $namafile = "";
-                unlink(storage_path("app/Arsip/$req->filename"));
-           
+             DB::beginTransaction();
+             $namafile = $req->filename.".".$req->ext;
+              $del =  DB::table("arsip_arsipberkasproyek_t")->where("filename", $req->filename)->delete();
+              if($del){
+                  unlink(storage_path("app/Arsip/$namafile"));
+              }
             $err = "";
             $status =1;
+            DB::commit();
+
 
         } catch (\Exception $e) {
             $status =0;
+            DB::rollBack();
             $err = "[".$e->getMessage()."]";
         }
 
@@ -179,7 +185,7 @@ class ArsipBerkasController extends Controller
       ->join("pegawai_m as pg","pg.id","=","ad.id_ppk")
       ->join("arsip_jenispekerjaan_m as jp","jp.id","=","ad.id_jenispekerjaan")
         ->select(
-                "ad.id", "ad.aktif", "ad.created_at", "ad.jenis", "ad.id_jenispekerjaan", "ad.namapekerjaan", "ad.id_ppk",
+                "ad.id", "ad.aktif", "ad.created_at", "ad.jenis", "ad.id_jenispekerjaan", "ad.namapekerjaan", "ad.id_ppk","ad.tahunanggaran",
                 "pg.namapegawai as namappk",
                 "jp.jenispekerjaan"
                 )->where("ad.aktif","1");
@@ -200,7 +206,7 @@ class ArsipBerkasController extends Controller
             $data = $data->where("ad.namapekerjaan","like","%$req->namappekerjaan%");
         }   
         
-        $data = $data->get();
+        $data = $data->orderBy("ad.created_at","desc")->limit(10)->get();
                 
         return response()->json([
             "data" => $data
@@ -210,7 +216,7 @@ class ArsipBerkasController extends Controller
     public function getdetailRegister( Request $req )
     {        
       $data = DB:: table("arsip_arsipberkasproyek_t as arb")
-      ->join("arsip_registerpengadaan_m as rg","rg.id", "arb.id_registerpengadaan")
+      ->leftjoin("arsip_registerpengadaan_m as rg","rg.id", "arb.id_registerpengadaan")
         ->select("arb.keterangan", "rg.registerpengadaan", "arb.id_registerpengadaan")
         ->where("arb.id_dokumen", $req['id_dokumen'])
         ->where("arb.aktif","1")
