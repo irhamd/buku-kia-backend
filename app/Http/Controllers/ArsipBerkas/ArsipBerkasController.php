@@ -100,7 +100,8 @@ class ArsipBerkasController extends Controller
              $namafile = $req->filename.".".$req->ext;
               $del =  DB::table("arsip_arsipberkasproyek_t")->where("filename", $req->filename)->delete();
               if($del){
-                  unlink(storage_path("app/Arsip/$namafile"));
+                //   unlink(storage_path("app/Arsip/$namafile"));
+                \File::delete("Arsip". $namafile);
               }
             $err = "";
             $status =1;

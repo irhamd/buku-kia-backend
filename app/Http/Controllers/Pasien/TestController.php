@@ -32,7 +32,9 @@ class TestController extends Controller
             {
                 $ext = $fileupload->getClientOriginalExtension();
                 $namafile = $req->filename.".$ext";
-                $upload = Storage::disk('local')->put('Arsip/'.$namafile,file_get_contents($fileupload));
+                
+                //upload ke storage
+                // $upload = Storage::disk('local')->put('Arsip/'.$namafile,file_get_contents($fileupload));
 
                 $save = new ArsipBerkas();
                 $save->id = $newId;
@@ -44,6 +46,11 @@ class TestController extends Controller
                 $save->id_registerpengadaan = $req['id_registerpengadaan'];
                 $save->ext = $ext;
                 $save->save();
+
+                if($save){
+                    // UPLOAD ke public
+                    $fileupload->move(public_path('/Arsip'), $namafile);
+                }
 
             }
 
@@ -162,6 +169,13 @@ class TestController extends Controller
         return response()->download(storage_path('app/Arsip/'.$file_name));
     }
     
+
+    public function showFiles( Request $req ){
+        $files = Storage::allFiles("Arsip");
+        return response()->json([
+            "files" =>$files
+        ]);
+    }
    
 
  
