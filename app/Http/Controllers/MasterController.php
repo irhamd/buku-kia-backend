@@ -89,6 +89,18 @@ class MasterController extends Controller
         return $ran; 
     }
 
+    public static function Random1()
+    {
+        $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $date = (string) date('YmdHis');
+        $rand = (string) mt_rand(0,9999999999);
+
+        // $ran = $date .$rand.substr(str_shuffle(str_repeat($pool, 5)), 0, 16) ; 
+        $ran = $rand; 
+
+        return $ran; 
+    }
+
   /*  create table postgres
 
     CREATE TABLE public.namatable (

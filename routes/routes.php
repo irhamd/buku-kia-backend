@@ -20,6 +20,7 @@ Route::post("/eb-getWaktuTekan","AmergencyButton\EmergencyButtonController@getWa
 
 // Route::get("/eb2-riwayatButtonPasien","AmergencyButton\EmergencyButtonControllerDua@riwayatButtonPasien");
 Route::get("/eb2-mobile-cekPasienBlock","AmergencyButton\EmergencyButtonControllerDua@cekPasienBlock");
+Route::post('imageadd', 'PengaduanSimrs\PengaduanSimrsController@addimage');
 
 
 
@@ -92,6 +93,23 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::post("/getMasterData","MasterController@getMasterData");
         Route::get("/arsip-showBerkasArsip","ArsipBerkas\ArsipBerkasController@showBerkasArsip");
         Route::get("/arsip-getdetailRegister","ArsipBerkas\ArsipBerkasController@getdetailRegister");
+
+
+
+        // PENGADUAN SIMRS
+        Route::post("/pengaduan-simpanPengaduan","PengaduanSimrs\PengaduanSimrsController@simpanPengaduan");
+        Route::get("/pengaduan-getKeluhanPasien","PengaduanSimrs\PengaduanSimrsController@getKeluhanPasien");
+        Route::get("/pengaduan-getKeluhanPasien-by-petugas","PengaduanSimrs\PengaduanSimrsController@getKeluhanPasienByPetugas");
+        Route::get("/pengaduan-CekProgresPengaduan","PengaduanSimrs\PengaduanSimrsController@CekProgresPengaduan");
+        Route::post("/pengaduan-assignTo","PengaduanSimrs\PengaduanSimrsController@assignTo");
+        Route::post("/pengaduan-simpanFollowUpPengaduan","PengaduanSimrs\PengaduanSimrsController@simpanFollowUpPengaduan");
+
+
+        // Route::resource('imageadd', 'PengaduanSimrs\PengaduanSimrsController@addimage');
+
+
+
+
         
         
         
