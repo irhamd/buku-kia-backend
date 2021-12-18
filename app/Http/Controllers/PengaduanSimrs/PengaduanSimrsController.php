@@ -125,6 +125,43 @@ class PengaduanSimrsController extends Controller
         return response()->json($data);
     }
 
+    public function getCountNumber(Request $req)
+    {
+        $rq = PengaduanSimrs::where("aktif","1")
+        ->where("assignto","=", \Auth::user()->id_pegawai )
+        ->where("progres","=","rq")
+        ->count();
+
+        $pr = PengaduanSimrs::where("aktif","1")
+        ->where("assignto","=", \Auth::user()->id_pegawai )
+        ->where("progres","=","pr")
+        ->count();
+        $dn = PengaduanSimrs::where("aktif","1")
+        ->where("assignto","=", \Auth::user()->id_pegawai )
+        ->where("progres","=","dn")
+        ->count();
+        $rj = PengaduanSimrs::where("aktif","1")
+        ->where("assignto","=", \Auth::user()->id_pegawai )
+        ->where("progres","=","rj")
+        ->count();
+
+        // if(isset($req->nama)){
+        //     $data = $data->whereRaw("LOWER(ps.nama) like '%".$req->nama."%'");
+        // }        
+        
+        // if(isset($req->nobuku)){
+        //     $data = $data->whereRaw(" LOWER(ps.nobuku) like '%".$req->nobuku."%'");
+        // }
+        // $data = $data->limit(10)->orderBy("ps.nama")->get();
+        
+        return response()->json([
+            "rq" => $rq,
+            "pr" => $pr,
+            "dn" => $dn,
+            "rj" => $rj,
+        ]);
+    }
+
     public function addimage(Request $request)
     {
       
