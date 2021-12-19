@@ -4,6 +4,7 @@
 /storage/*.key
 /vendor
 /public/Arsip
+/public/Pengaduan
 /storage/Arsip
 .env
 .env.backup

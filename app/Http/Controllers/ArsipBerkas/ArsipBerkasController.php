@@ -186,7 +186,7 @@ class ArsipBerkasController extends Controller
       ->join("pegawai_m as pg","pg.id","=","ad.id_ppk")
       ->join("arsip_jenispekerjaan_m as jp","jp.id","=","ad.id_jenispekerjaan")
         ->select(
-                "ad.id", "ad.aktif", "ad.created_at", "ad.jenis", "ad.id_jenispekerjaan", "ad.namapekerjaan", "ad.id_ppk","ad.tahunanggaran",
+                "ad.id", "ad.aktif", "ad.created_at", "ad.jenis", "ad.id_jenispekerjaan", "ad.namapekerjaan","ad.nilaikontrak","ad.hps", "ad.id_ppk","ad.tahunanggaran",
                 "pg.namapegawai as namappk",
                 "jp.jenispekerjaan"
                 )->where("ad.aktif","1");
@@ -207,7 +207,12 @@ class ArsipBerkasController extends Controller
             $data = $data->where("ad.namapekerjaan","like","%$req->namappekerjaan%");
         }   
         
-        $data = $data->orderBy("ad.created_at","desc")->limit(10)->get();
+
+        if(isset($req->id_ppk) && $req->id_ppk != ""){
+            $data = $data->where("ad.id_ppk",$req->id_ppk);
+        }   
+        
+        $data = $data->orderBy("ad.created_at","desc")->limit(50)->get();
                 
         return response()->json([
             "data" => $data

@@ -81,6 +81,8 @@ class TestController extends Controller
             $dok->namapekerjaan = $req['namapekerjaan'];
             $dok->tahunanggaran = $req['tahunanggaran'];
             $dok->id_ppk = $req['id_ppk'];
+            $dok->hps = $req['hps'];
+            $dok->nilaikontrak = $req['nilaikontrak'];
             $dok->save();
             
             $err = "";
