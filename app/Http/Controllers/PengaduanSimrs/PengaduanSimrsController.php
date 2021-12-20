@@ -127,22 +127,24 @@ class PengaduanSimrsController extends Controller
 
     public function getCountNumber(Request $req)
     {
+        $pegawai = \Auth::user()->id_pegawai;
+        
         $rq = PengaduanSimrs::where("aktif","1")
-        ->where("assignto","=", \Auth::user()->id_pegawai )
-        ->where("progres","=","rq")
+        ->where("assignto", $pegawai )
+        ->where("progres","rq")
         ->count();
 
         $pr = PengaduanSimrs::where("aktif","1")
-        ->where("assignto","=", \Auth::user()->id_pegawai )
-        ->where("progres","=","pr")
+        ->where("assignto", $pegawai )
+        ->where("progres","pr")
         ->count();
         $dn = PengaduanSimrs::where("aktif","1")
-        ->where("assignto","=", \Auth::user()->id_pegawai )
-        ->where("progres","=","dn")
+        ->where("assignto", $pegawai )
+        ->where("progres","dn")
         ->count();
         $rj = PengaduanSimrs::where("aktif","1")
-        ->where("assignto","=", \Auth::user()->id_pegawai )
-        ->where("progres","=","rj")
+        ->where("assignto", $pegawai )
+        ->where("progres","rj")
         ->count();
 
         // if(isset($req->nama)){
@@ -159,6 +161,7 @@ class PengaduanSimrsController extends Controller
             "pr" => $pr,
             "dn" => $dn,
             "rj" => $rj,
+            "id_pegawai" =>\Auth::user()->id_pegawai
         ]);
     }
 
