@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Model\PengaduanSimrs\PengaduanSimrs;
 use App\Model\KehamilanSaatIni;
 use App\Model\KunjunganPasien;
+use App\Http\Controllers\Notification\NotifikasiController;
 use DB;
 use App\Http\Controllers\MasterController;
 
@@ -29,22 +30,23 @@ class PengaduanSimrsController extends Controller
             $save->close = '0';
             $save->assignto = $req['assignto'];
             $save->nomorpengaduan = isset($req['nomorpengaduan']) ? $req['nomorpengaduan'] : $newId;
-            // $save->nomorpengaduan =  $req['nomorpengaduan'] : $newId;
-            // unitkerja
-            // kodefirebase
-            // created_at
-            // updated_at
-            // modified_by
-            // nohp
-            // isipengaduan
-            // assignto
-            // waktu_tindaklanjut
-            // waktu_selesai
-            
             $save->save();
             DB::commit();
             $status = $save ? 1:0;
             $err = "";
+
+
+            if($status == 1){
+                    $token = DB::table("pegawai_m")->where("id", $req['assignto'])->select("token_firebase")->first();
+                    // $aa = DB::table("m_ruangan")->where("id", $req['id_ruangan'])->first();
+
+                    NotifikasiController::sendNotification(
+                        strtoupper($req['unitkerja']), 
+                        $req->isipengaduan, 
+                        $token->token_firebase
+                    );
+            }
+        
 
         } catch (\Exception $e) {
             $status =0;
@@ -55,7 +57,8 @@ class PengaduanSimrsController extends Controller
         return response()->json([
             "msg"=> $status ==0 ? "Gagal simpan data...".$err :"Suksess .",
             "id" =>  $save->id,
-            "sts" =>$status
+            "token" =>  $token->token_firebase,
+            "sts" =>$status,
         ]);
     }
     public function assignTo( Request $req )
@@ -200,6 +203,7 @@ class PengaduanSimrsController extends Controller
             $save->solusi = $req['solusi'];
             $save->penyebab = $req['penyebab'];
             $save->close = $req['close'];
+            $save->waktu_selesai = date('Y-m-d H:i:s');
 
             if($req['close'] == "1"){
                     $save->progres = "dn";

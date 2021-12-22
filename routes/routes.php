@@ -21,6 +21,7 @@ Route::post("/eb-getWaktuTekan","AmergencyButton\EmergencyButtonController@getWa
 // Route::get("/eb2-riwayatButtonPasien","AmergencyButton\EmergencyButtonControllerDua@riwayatButtonPasien");
 Route::get("/eb2-mobile-cekPasienBlock","AmergencyButton\EmergencyButtonControllerDua@cekPasienBlock");
 Route::post('imageadd', 'PengaduanSimrs\PengaduanSimrsController@addimage');
+Route::post('notif-sendNotification', 'Notification\NotifikasiController@sendNotification');
 
 
 

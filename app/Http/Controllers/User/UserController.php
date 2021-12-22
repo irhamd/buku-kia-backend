@@ -67,6 +67,8 @@ class UserController extends Controller
             ->where("uss.id",$user->id)
             ->first();
 
+            DB::table("pegawai_m")->where("id", $user->id_pegawai )->update(["token_firebase"=> $request["token_firebase"]]);
+
 
         
         $response = [
