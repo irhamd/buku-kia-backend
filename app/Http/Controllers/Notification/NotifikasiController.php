@@ -20,7 +20,7 @@ class NotifikasiController extends Controller
 	        	[
 	        		'title' => $title,
 	        		'body' => $body,
-	        		'icon' => 'https://cdn-icons-png.flaticon.com/512/891/891012.png',
+	        		'icon' => '',
 	        		'click_action' => ""
 	        	]
 	        ,

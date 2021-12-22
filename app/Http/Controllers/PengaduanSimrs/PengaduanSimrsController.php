@@ -213,7 +213,7 @@ class PengaduanSimrsController extends Controller
             $file_sebelum = $req->file('image_sebelum'); 
             $file_setelah = $req->file('image_setelah'); 
 
-            if ($file_sebelum)
+            if ( isset ($file_sebelum) && $file_sebelum!= null)
             {
                 $ext = $file_sebelum->getClientOriginalExtension();
                 $fn = $filene."-sb .$ext";
@@ -221,7 +221,7 @@ class PengaduanSimrsController extends Controller
 
                 $file_sebelum->move(public_path('/Pengaduan'), $fn);
             }
-            if ($file_setelah)
+            if (isset($file_setelah) && $file_setelah!= null )
             {
                 $ext = $file_setelah->getClientOriginalExtension();
                 $fn = $filene."-st .$ext";
