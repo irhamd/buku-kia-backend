@@ -87,7 +87,7 @@ class PengaduanSimrsController extends Controller
     {
         $data = DB::table("pgd_pengaduan_t as pdg")->where("pdg.aktif","1")
         ->leftjoin("pegawai_m as pg","pdg.assignto","=", "pg.id")
-        ->select("pdg.*", "pg.namapegawai")
+        ->select("pdg.*", "pg.namapegawai", "pg.foto")
         ->where("pdg.created_at", ">", $req['tglawal'])
         ->where("pdg.created_at", "<", $req['tglakhir'])
         ->orderBy("pdg.created_at")->get();
