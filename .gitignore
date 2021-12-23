@@ -15,3 +15,5 @@ npm-debug.log
 yarn-error.log
 
 https://github.com/irhamd/buku-kia-backend.git
+/storage/logs
+storage/logs/laravel.log

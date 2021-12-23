@@ -35,16 +35,10 @@ class PengaduanSimrsController extends Controller
             $status = $save ? 1:0;
             $err = "";
 
-
+            $token = "";
             if($status == 1){
-                    $token = DB::table("pegawai_m")->where("id", $req['assignto'])->select("token_firebase")->first();
-                    // $aa = DB::table("m_ruangan")->where("id", $req['id_ruangan'])->first();
-
-                    NotifikasiController::sendNotification(
-                        strtoupper($req['unitkerja']), 
-                        $req->isipengaduan, 
-                        $token->token_firebase
-                    );
+                $token = DB::table("pegawai_m")->where("id", $req['assignto'])->select("token_firebase")->first();
+                $token = $token->token_firebase;
             }
         
 
@@ -57,7 +51,7 @@ class PengaduanSimrsController extends Controller
         return response()->json([
             "msg"=> $status ==0 ? "Gagal simpan data...".$err :"Suksess .",
             "id" =>  $save->id,
-            "token" =>  $token->token_firebase,
+            "token" =>  $token,
             "sts" =>$status,
         ]);
     }

@@ -161,6 +161,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Kawankoding\Fcm\FcmServiceProvider::class,
 
         /*
          * Package Service Providers...
