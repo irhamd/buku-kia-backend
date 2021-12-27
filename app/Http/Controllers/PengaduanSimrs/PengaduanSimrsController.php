@@ -86,9 +86,9 @@ class PengaduanSimrsController extends Controller
         ->where("pdg.created_at", "<", $req['tglakhir'])
         ->orderBy("pdg.created_at")->get();
 
-        // if(isset($req->nama)){
-        //     $data = $data->whereRaw("LOWER(ps.nama) like '%".$req->nama."%'");
-        // }        
+        if(isset($req->petugas_pasar_id)){
+            $data = $data->where("pdg.assignto", $req['petugas_pasar_id']);
+        }        
         
         // if(isset($req->nobuku)){
         //     $data = $data->whereRaw(" LOWER(ps.nobuku) like '%".$req->nobuku."%'");
@@ -195,7 +195,7 @@ class PengaduanSimrsController extends Controller
             $save->penyebab = $req['penyebab'];
             // $save->finished_by = \Auth::user()->id_pegawai;
             $save->solusi = $req['solusi'];
-            $save->penyebab = $req['penyebab'];
+            // $save->penyebab = $req['penyebab'];
             $save->close = $req['close'];
             $save->waktu_selesai = date('Y-m-d H:i:s');
 
@@ -203,6 +203,68 @@ class PengaduanSimrsController extends Controller
                     $save->progres = "dn";
                 
             }
+
+            $file_sebelum = $req->file('image_sebelum'); 
+            $file_setelah = $req->file('image_setelah'); 
+
+            if ( isset ($file_sebelum) && $file_sebelum!= null)
+            {
+                $ext = $file_sebelum->getClientOriginalExtension();
+                $fn = $filene."-sb .$ext";
+                $save->foto_sebelum =  $fn ;
+
+                $file_sebelum->move(public_path('/Pengaduan'), $fn);
+            }
+            if (isset($file_setelah) && $file_setelah!= null )
+            {
+                $ext = $file_setelah->getClientOriginalExtension();
+                $fn = $filene."-st .$ext";
+                $save->foto_sesudah =  $fn ;
+                $file_setelah->move(public_path('/Pengaduan'), $fn);
+            }
+
+            
+            $save->save();
+            DB::commit();
+            $status = $save ? 1:0;
+            $err = "";
+
+        } catch (\Exception $e) {
+            $status =0;
+            DB::rollback();
+            $err = "[".$e->getMessage()."]";
+        }
+    
+        return response()->json([
+            "msg"=> $status ==0 ? "Gagal simpan data...".$err :"Suksess .",
+            "sts" =>$status
+        ]);
+    }
+    public function simpanInputPengaduan( Request $req )
+    {
+        try {
+            $filene = MasterController::Random();
+            DB::beginTransaction();
+            $id_pegawai = \Auth::user()->id_pegawai;
+            $save = new PengaduanSimrs();
+
+            // $save->id = $filene;
+            $save->nohp = $req['nohp'];
+            $save->unitkerja = $req['unitkerja'];
+            $save->isipengaduan = $req['isipengaduan'];
+            $save->assignto = $id_pegawai;
+            $save->waktu_tindaklanjut = date('Y-m-d H:i:s');
+            $save->waktu_selesai = date('Y-m-d H:i:s');
+            $save->nomorpengaduan = $filene;
+            $save->progres = "dn";
+            $save->aktif = "1";
+            $save->pelapor = "langsung";
+            $save->finished_by = $id_pegawai;
+            $save->solusi = $req['solusi'];
+            $save->keterangan = $req['keterangan'];
+            $save->penyebab = $req['penyebab'];
+            $save->nama = $req['nama'];
+            $save->close = "1";
 
             $file_sebelum = $req->file('image_sebelum'); 
             $file_setelah = $req->file('image_setelah'); 
