@@ -85,7 +85,7 @@ class PengaduanSimrsController extends Controller
         ->where("pdg.created_at", ">", $req['tglawal'])
         ->where("pdg.created_at", "<", $req['tglakhir'])
         ->orderBy("pdg.created_at")->get();
-
+        
         if(isset($req->petugas_pasar_id)){
             $data = $data->where("pdg.assignto", $req['petugas_pasar_id']);
         }        
@@ -107,18 +107,13 @@ class PengaduanSimrsController extends Controller
     {
         $data = PengaduanSimrs::where("aktif","1")
         ->where("assignto","=", \Auth::user()->id_pegawai )
-        ->where("close","=",$req["status"])
-        ->orderBy("created_at")->get();
-
-        // if(isset($req->nama)){
-        //     $data = $data->whereRaw("LOWER(ps.nama) like '%".$req->nama."%'");
-        // }        
+        ->where("close","=",$req["status"]);
         
-        // if(isset($req->nobuku)){
-        //     $data = $data->whereRaw(" LOWER(ps.nobuku) like '%".$req->nobuku."%'");
-        // }
-        // $data = $data->limit(10)->orderBy("ps.nama")->get();
-        
+        if(isset($req->tanggal)){
+            $data = $data->where("created_at", ">", "$req->tanggal 00:00:00")
+            ->where("created_at", "<", "$req->tanggal 23:59:00");
+        }        
+         $data = $data->orderBy("created_at")->get();
         return response()->json($data);
     }
 
@@ -301,6 +296,29 @@ class PengaduanSimrsController extends Controller
             "msg"=> $status ==0 ? "Gagal simpan data...".$err :"Suksess .",
             "sts" =>$status
         ]);
+    }
+
+    public function getRuangan(){
+
+        $ruang = [];
+
+        $data = DB::table("m_ruangan")->where("aktif", "1")->get();
+
+        foreach ($data as $dat) {
+            array_push($ruang, $dat->ruangan);
+        }
+       
+        return response()->json($ruang);
+    }
+
+    public function updateStatus( Request $req ){
+        $update = PengaduanSimrs::find($req['id'])
+        ->update([ 'status'=> $req['status'] ]);
+        return response()->json( $update ? "1" : "0" );
+    }
+    public function hapusTugas( Request $req ){
+        $del = PengaduanSimrs::find($req['id'])->delete();
+        return response()->json( $del ? "1" : "0" );
     }
 
 

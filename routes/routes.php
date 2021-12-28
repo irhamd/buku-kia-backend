@@ -106,16 +106,11 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::post("/pengaduan-simpanFollowUpPengaduan","PengaduanSimrs\PengaduanSimrsController@simpanFollowUpPengaduan");
         Route::get("/pengaduan-getCountNumber","PengaduanSimrs\PengaduanSimrsController@getCountNumber");
         Route::post("/pengaduan-simpanInputPengaduan","PengaduanSimrs\PengaduanSimrsController@simpanInputPengaduan");
-
+        Route::get("/pengaduan-getRuangan","PengaduanSimrs\PengaduanSimrsController@getRuangan");
+        Route::get("/pengaduan-updateStatus","PengaduanSimrs\PengaduanSimrsController@updateStatus");
+        Route::delete("/pengaduan-hapusTugas","PengaduanSimrs\PengaduanSimrsController@hapusTugas");
 
         // Route::resource('imageadd', 'PengaduanSimrs\PengaduanSimrsController@addimage');
-
-
-
-
-        
-        
-        
 });
 
 
