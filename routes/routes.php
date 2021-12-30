@@ -109,6 +109,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::get("/pengaduan-getRuangan","PengaduanSimrs\PengaduanSimrsController@getRuangan");
         Route::get("/pengaduan-updateStatus","PengaduanSimrs\PengaduanSimrsController@updateStatus");
         Route::delete("/pengaduan-hapusTugas","PengaduanSimrs\PengaduanSimrsController@hapusTugas");
+        Route::post("/pengaduan-simpanRuangan","PengaduanSimrs\PengaduanSimrsController@simpanRuangan");
 
         // Route::resource('imageadd', 'PengaduanSimrs\PengaduanSimrsController@addimage');
 });

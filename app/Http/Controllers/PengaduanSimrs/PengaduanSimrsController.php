@@ -17,7 +17,6 @@ class PengaduanSimrsController extends Controller
     {
         $newId = MasterController::Random1();
         try {
-           DB::beginTransaction();
             $save = PengaduanSimrs::findOrNew($req['id']);
 
             $save->aktif = 1;
@@ -31,7 +30,6 @@ class PengaduanSimrsController extends Controller
             $save->assignto = $req['assignto'];
             $save->nomorpengaduan = isset($req['nomorpengaduan']) ? $req['nomorpengaduan'] : $newId;
             $save->save();
-            DB::commit();
             $status = $save ? 1:0;
             $err = "";
 
@@ -40,11 +38,8 @@ class PengaduanSimrsController extends Controller
                 $token = DB::table("pegawai_m")->where("id", $req['assignto'])->select("token_firebase")->first();
                 $token = $token->token_firebase;
             }
-        
-
         } catch (\Exception $e) {
             $status =0;
-            DB::rollback();
             $err = "[".$e->getMessage()."]";
         }
     
@@ -316,12 +311,27 @@ class PengaduanSimrsController extends Controller
         ->update([ 'status'=> $req['status'] ]);
         return response()->json( $update ? "1" : "0" );
     }
+
     public function hapusTugas( Request $req ){
         $del = PengaduanSimrs::find($req['id'])->delete();
         return response()->json( $del ? "1" : "0" );
     }
 
-
+  public function simpanRuangan( Request $req )
+    {
+        try {
+            $id = DB::table('m_ruangan')->max('id') + 1;
+            $save = DB::table("m_ruangan")->insert([ "ruangan"=>$req['ruangan'], "aktif"=> "1", "id"=>$id] );
+            $status = 1;
+        } catch (\Exception $e) {
+            $status = 0;
+            $err = $e->getmessage();   
+        }
+        return response()->json([
+            "msg"=> $status ==0 ? "Gagal simpan data...".$err :"Suksess .",
+            "sts" =>$status
+        ]);
+    }
 
 
  
