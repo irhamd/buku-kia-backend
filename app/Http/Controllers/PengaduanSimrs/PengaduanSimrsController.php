@@ -108,7 +108,7 @@ class PengaduanSimrsController extends Controller
             $data = $data->where("created_at", ">", "$req->tanggal 00:00:00")
             ->where("created_at", "<", "$req->tanggal 23:59:00");
         }        
-         $data = $data->orderBy("created_at")->get();
+         $data = $data->orderBy("created_at", $req["status"] == 1 ? "desc" :"asc" )->take(50)->get();
         return response()->json($data);
     }
 
