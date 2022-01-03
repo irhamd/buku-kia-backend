@@ -17,18 +17,24 @@ class PengaduanSimrsController extends Controller
     {
         $newId = MasterController::Random1();
         try {
-            $save = PengaduanSimrs::findOrNew($req['id']);
+            if( $req['id'] =='' ){
+                $save = new PengaduanSimrs();
+                $save->aktif = 1;
+                $save->progres = 'rq';
+                $save->nomorpengaduan = isset($req['nomorpengaduan']) ? $req['nomorpengaduan'] : $newId;
+                $save->close = '0';
 
-            $save->aktif = 1;
+            } else{
+                $save =  PengaduanSimrs::find($req['id']);
+            }
+
             $save->unitkerja = $req['unitkerja'];
             $save->id_ruangan = $req['id_ruangan'];
+            $save->nama = $req['nama'];
             $save->nohp = $req['nohp'];
             $save->isipengaduan = $req['isipengaduan'];
             $save->keterangan = $req['keterangan'];
-            $save->progres = 'rq';
-            $save->close = '0';
             $save->assignto = $req['assignto'];
-            $save->nomorpengaduan = isset($req['nomorpengaduan']) ? $req['nomorpengaduan'] : $newId;
             $save->save();
             $status = $save ? 1:0;
             $err = "";
@@ -78,13 +84,16 @@ class PengaduanSimrsController extends Controller
         ->leftjoin("pegawai_m as pg","pdg.assignto","=", "pg.id")
         ->select("pdg.*", "pg.namapegawai", "pg.foto")
         ->where("pdg.created_at", ">", $req['tglawal'])
-        ->where("pdg.created_at", "<", $req['tglakhir'])
-        ->orderBy("pdg.created_at")->get();
+        ->where("pdg.created_at", "<", $req['tglakhir']);
         
-        if(isset($req->petugas_pasar_id)){
-            $data = $data->where("pdg.assignto", $req['petugas_pasar_id']);
+        if(isset($req->id_pegawai)){
+            $data = $data->where("pdg.assignto", $req['id_pegawai']);
+        }        
+        if(isset($req->ruangan)){
+            $data = $data->where("pdg.unitkerja", $req['ruangan']);
         }        
         
+        $data= $data->orderBy("pdg.created_at")->get();
         // if(isset($req->nobuku)){
         //     $data = $data->whereRaw(" LOWER(ps.nobuku) like '%".$req->nobuku."%'");
         // }
