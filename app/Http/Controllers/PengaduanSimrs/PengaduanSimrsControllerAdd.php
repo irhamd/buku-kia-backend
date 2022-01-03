@@ -13,10 +13,21 @@ use App\Http\Controllers\MasterController;
 
 class PengaduanSimrsControllerAdd extends Controller
 {
-    public function detailTugas( Request $req ){
+    public function detailTugas12( Request $req ){
         $detail = PengaduanSimrs::find($req['id']);
         return response()->json( $detail );
     }
+
+    public function detailTugas( Request $req ){
+        $detail = DB::table("pgd_pengaduan_t as pdg")
+        ->leftjoin("pegawai_m as pg","pg.id","=", "pdg.assignto")
+        ->select("pdg.*", "pg.namapegawai")
+        ->where("pdg.id", "=", $req['id'])
+        ->first();
+
+        return response()->json( $detail );
+    }
+
  
 
  
