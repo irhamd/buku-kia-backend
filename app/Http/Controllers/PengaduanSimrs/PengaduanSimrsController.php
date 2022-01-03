@@ -110,9 +110,13 @@ class PengaduanSimrsController extends Controller
     public function getKeluhanPasienByPetugas(Request $req)
     {
         $data = PengaduanSimrs::where("aktif","1")
-        ->where("assignto","=", \Auth::user()->id_pegawai )
         ->where("close","=",$req["status"]);
         
+        if( \Auth::user()->role == "kains" ){
+        } else{
+            $data = $data->where("assignto","=", \Auth::user()->id_pegawai );
+        }
+
         if(isset($req->tanggal)){
             $data = $data->where("created_at", ">", "$req->tanggal 00:00:00")
             ->where("created_at", "<", "$req->tanggal 23:59:00");
