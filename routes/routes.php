@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::post("/PushPanikButton","Rujukan\RujukanController@PushPanikButton");
 Route::post("/testUpload","Pasien\TestController@testUpload");
-Route::post("/simpanDataBerkas","Pasien\TestController@simpanDataBerkas");
 Route::get("/showFiles","Pasien\TestController@showFiles");
 
 
@@ -94,7 +93,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::post("/getMasterData","MasterController@getMasterData");
         Route::get("/arsip-showBerkasArsip","ArsipBerkas\ArsipBerkasController@showBerkasArsip");
         Route::get("/arsip-getdetailRegister","ArsipBerkas\ArsipBerkasController@getdetailRegister");
-
+        Route::post("/simpanDataBerkas","ArsipBerkas\ArsipBerkasController@simpanDataBerkas");
 
 
         // PENGADUAN SIMRS

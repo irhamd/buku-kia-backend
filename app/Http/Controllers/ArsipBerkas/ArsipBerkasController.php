@@ -65,7 +65,6 @@ class ArsipBerkasController extends Controller
     public function simpanDataBerkas( Request $req )
     {        
         try {
-            DB::beginTransaction();
             $dok = ArsipDokumen::firstOrNew(['id' =>  $req['id']]);
             $dok->id = $req['id'];
             $dok->aktif = "1";
@@ -74,14 +73,14 @@ class ArsipBerkasController extends Controller
             $dok->namapekerjaan = $req['namapekerjaan'];
             $dok->tahunanggaran = $req['tahunanggaran'];
             $dok->id_ppk = $req['id_ppk'];
+            $dok->hps = $req['hps'];
+            $dok->nilaikontrak = $req['nilaikontrak'];
             $dok->save();
             
             $err = "";
-            DB::commit();
             $status = 1;
 
         } catch (\Exception $e) {
-            DB::rollBack();
             $status =0;
             $err = "[".$e->getMessage()."]";
         }
