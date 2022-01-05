@@ -32,6 +32,7 @@ class PengaduanSimrsControllerAdd extends Controller
         $data = DB::table("pegawai_m as pg")
         ->join( 'users as us', 'us.id_pegawai', 'pg.id' )
         ->select("pg.*", "us.role")
+        ->where("us.ispetugas", "1")
         ->get();
 
         return response()->json( $data );
