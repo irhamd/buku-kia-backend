@@ -28,6 +28,15 @@ class PengaduanSimrsControllerAdd extends Controller
         return response()->json( $detail );
     }
 
+    public function getpetugas(){
+        $data = DB::table("pegawai_m as pg")
+        ->join( 'users as us', 'us.id_pegawai', 'pg.id' )
+        ->select("pg.*", "us.role")
+        ->get();
+
+        return response()->json( $data );
+    }
+
  
 
  

@@ -113,6 +113,8 @@ class PengaduanSimrsController extends Controller
         ->where("close","=",$req["status"]);
         
         if( \Auth::user()->role == "kains" ){
+            $data = $data->where("assignto","=", $req->id_pegawai );
+
         } else{
             $data = $data->where("assignto","=", \Auth::user()->id_pegawai );
         }
