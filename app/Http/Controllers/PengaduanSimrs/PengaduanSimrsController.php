@@ -33,6 +33,7 @@ class PengaduanSimrsController extends Controller
             $save->nama = $req['nama'];
             $save->nohp = $req['nohp'];
             $save->isipengaduan = $req['isipengaduan'];
+            $save->id_kategori = $req['id_kategori'];
             $save->keterangan = $req['keterangan'];
             $save->assignto = $req['assignto'];
             $save->save();

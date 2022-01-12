@@ -221,10 +221,11 @@ class ArsipBerkasController extends Controller
     public function getdetailRegister( Request $req )
     {        
       $data = DB:: table("arsip_arsipberkasproyek_t as arb")
-      ->leftjoin("arsip_registerpengadaan_m as rg","rg.id", "arb.id_registerpengadaan")
+      ->join("arsip_registerpengadaan_m as rg","rg.id", "arb.id_registerpengadaan")
         ->select("arb.keterangan", "rg.registerpengadaan", "arb.id_registerpengadaan")
         ->where("arb.id_dokumen", $req['id_dokumen'])
         ->where("arb.aktif","1")
+        // ->orderBy( "rg.id" )
         ->groupBy("arb.keterangan", "rg.registerpengadaan","arb.id_registerpengadaan")
         ->get();
 
