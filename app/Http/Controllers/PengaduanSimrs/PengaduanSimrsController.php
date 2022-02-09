@@ -46,6 +46,7 @@ class PengaduanSimrsController extends Controller
                 $token = $token->token_firebase;
             }
         } catch (\Exception $e) {
+            $token = "";
             $status =0;
             $err = "[".$e->getMessage()."]";
         }
