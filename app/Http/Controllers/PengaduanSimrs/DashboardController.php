@@ -52,7 +52,7 @@ class DashboardController extends Controller
             from(
                 SELECT  pdt.*  from pgd_pengaduan_t as pdt 
                 WHERE pdt.created_at BETWEEN '$req->tglawal' and '$req->tglakhir' and pdt.aktif = '1'
-            ) as rr GROUP BY unitkerja ORDER BY jumlah desc limit 8
+            ) as rr GROUP BY unitkerja ORDER BY jumlah desc limit 4
         ");
         $databypetugas = DB::select("
                 SELECT 
@@ -64,7 +64,7 @@ class DashboardController extends Controller
             ) as rr
             GROUP BY namapegawai
             ORDER BY jumlah desc 
-            limit 5
+            limit 3
         ");
 
         $databykategori = DB::select("
