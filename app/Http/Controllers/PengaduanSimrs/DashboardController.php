@@ -67,10 +67,20 @@ class DashboardController extends Controller
             limit 5
         ");
 
+        $databykategori = DB::select("
+            SELECT  kategory, count(id) as jumlah
+            from(
+                SELECT kt.kategory,  pdt.*  from pgd_pengaduan_t as pdt 
+                                LEFT JOIN pgd_kategori as kt on kt.id = pdt.id_kategori
+                                WHERE pdt.created_at BETWEEN '$req->tglawal' and '$req->tglakhir' and pdt.aktif = '1' 
+            ) as rr GROUP BY kategory
+        ");
+
         return response()->json([
             "chart"=> $datachart,
             "count"=> $datacount,
             "bypetugas"=> $databypetugas,
+            "bykategori"=> $databykategori,
             "byruangan"=> $databyruangan,
         ]);
         
