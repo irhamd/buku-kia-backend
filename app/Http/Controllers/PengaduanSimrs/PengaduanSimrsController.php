@@ -63,6 +63,12 @@ class PengaduanSimrsController extends Controller
         try {
             $save = PengaduanSimrs::find($req['id']);
             $save->assignto = $req['assignto'];
+            $save->alihkanke = $req['alihkanke'];
+            if( $req['alihkanke']){
+                $save->progres = 'alh'; // alihkan
+            } else {
+                $save->progres = 'rq'; // alihkan
+            }
             $save->save();
             $status = $save ? 1:0;
             $err = "";
@@ -84,7 +90,8 @@ class PengaduanSimrsController extends Controller
     {
         $data = DB::table("pgd_pengaduan_t as pdg")->where("pdg.aktif","1")
         ->leftjoin("pegawai_m as pg","pdg.assignto","=", "pg.id")
-        ->select("pdg.*", "pg.namapegawai", "pg.foto")
+        ->leftjoin("unitkerja_m as un","un.id","=", "pdg.alihkanke")
+        ->select("pdg.*", "pg.namapegawai as nmpg", "pg.foto", DB::raw(" case when pdg.progres='alh' then un.unitkerja else pg.namapegawai end as namapegawai "))
         ->where("pdg.created_at", ">", $req['tglawal'])
         ->where("pdg.created_at", "<", $req['tglakhir']);
         
@@ -92,7 +99,8 @@ class PengaduanSimrsController extends Controller
             $data = $data->where("pdg.assignto", $req['id_pegawai']);
         }        
         if(isset($req->ruangan)){
-            $data = $data->where("pdg.unitkerja", $req['ruangan']);
+            $data = $data->whereRaw(" lower(pdg.unitkerja) ILIKE  '%$req->ruangan%' ");
+            // $data = $data->whereRaw("pdg.unitkerja","like", "%$req->ruangan%");
         }        
         
         $data= $data->orderBy("pdg.created_at")->get();
