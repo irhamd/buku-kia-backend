@@ -58,7 +58,7 @@ class DashboardController extends Controller
         // ");
 
         $databyruangan = DB::select("
-              SELECT  unitkerja  ,  count( unitkerja) as jumlah_angka , to_char(100.0* count( unitkerja)/$total,'999D9') jumlah 
+              SELECT  unitkerja  ,  count( unitkerja) as jumlah_angka , to_char(100.0* count( unitkerja)/$total,'999') jumlah 
                 from( 
                     SELECT  pdt.*  from pgd_pengaduan_t as pdt 
                     WHERE pdt.created_at BETWEEN '$req->tglawal' and '$req->tglakhir' and pdt.aktif = '1'
@@ -66,7 +66,7 @@ class DashboardController extends Controller
         ");
         $databypetugas = DB::select("
                 SELECT 
-                namapegawai , count( namapegawai )  as jumlah_angka , to_char(100.0* count( namapegawai)/$total,'999D9') jumlah 
+                namapegawai , count( namapegawai )  as jumlah_angka , to_char(100.0* count( namapegawai)/$total,'999') jumlah 
             from(
                 SELECT pg.namapegawai ,  pdt.*  from pgd_pengaduan_t as pdt 
                 left join pegawai_m as pg on pg.id = pdt.assignto
@@ -78,7 +78,7 @@ class DashboardController extends Controller
         ");
 
         $databykategori = DB::select("
-            SELECT  kategory, count(id) as jumlah_angka , to_char(100.0* count( id)/$total,'999D9') jumlah 
+            SELECT  kategory, count(id) as jumlah_angka , to_char(100.0* count( id)/$total,'999') jumlah 
             from(
                 SELECT kt.kategory,  pdt.*  from pgd_pengaduan_t as pdt 
                                 LEFT JOIN pgd_kategori as kt on kt.id = pdt.id_kategori
