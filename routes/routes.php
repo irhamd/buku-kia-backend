@@ -37,7 +37,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 
         // PEMERIKSAAN DOKTER
         Route::post("/simpanPemeriksaanDokter","Pasien\KehamilanController@simpanPemeriksaanDokter");
-        
+
         // TESTT
 
         // KUNJUNGAN PASIEN
@@ -54,41 +54,42 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::get("/tidakPerluDiRujuk/{id}","Rujukan\RujukanController@tidakPerluDiRujuk");
         Route::get("/updateStatusPasienRujuk/{id}/{status}","Rujukan\RujukanController@updateStatusPasienRujuk");
         Route::get("/getPasienRujukRS","Rujukan\RujukanController@getPasienRujukRS");
-        
-        
+
+
         Route::post("/updateKeluhanRujuk","Rujukan\KeluhanController@updateKeluhanRujuk");
-        
-        
-        
+
+
+
         // Route::post("/getMasterData","MasterController@getMasterData");
         Route::get("/Random","MasterController@Random");
         Route::get("/make", function(){
                 // $data = csrf_token();
 
-               
+
                 return response()->json(csrf_token());
                 // return  Auth::user()->currentAccessToken();
         });
-        
+
         // PASIEN REGISTRASI
         Route::post("/saveRegistrasiPasien","Pasien\RegistrasiController@saveRegistrasiPasien");
         Route::get("/daftarRegistrasiPasien","Pasien\RegistrasiController@daftarRegistrasiPasien");
 
-        // PASIEN 
+        // PASIEN
         Route::get("/getDataPasien","Pasien\PasienController@getDataPasien");
         Route::get("/getDataPasienRev","Pasien\PasienController@getDataPasienRev");
         Route::post("/saveDataPasien","Pasien\PasienController@saveDataPasien");
-        
+
         Route::get("logout","User\UserController@logout");
-        
+
         Route::get("/detailKunjungan/{id_pasien}","Kunjungan\KunjunganController@detailKunjungan");
-        
+
 
 
         // ARSIP ================================================================================================
         Route::get("/arsip-getBerkas","ArsipBerkas\ArsipBerkasController@getBerkas");
         Route::get("/arsip-fileupload","ArsipBerkas\ArsipBerkasController@getfileupload");
         Route::delete("/deleteUpload","ArsipBerkas\ArsipBerkasController@deleteUpload");
+        Route::delete("/deleteProyek","ArsipBerkas\ArsipBerkasController@deleteProyek");
         Route::get("/downloadBerkas","ArsipBerkas\ArsipBerkasController@downloadBerkas");
         Route::post("/getMasterData","MasterController@getMasterData");
         Route::get("/arsip-showBerkasArsip","ArsipBerkas\ArsipBerkasController@showBerkasArsip");
@@ -119,7 +120,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 
 // Route::post('/tokens/create', function (Request $request) {
 //         $token = $request->user()->createToken($request->token_name);
-    
+
 //         return ['token' => $token->plainTextToken];
 //     });
 

@@ -21,13 +21,13 @@ use Response;
 class ArsipBerkasController extends Controller
 {
     public function testUpload( Request $req )
-    {        
+    {
         try {
-           
-            $newId = MasterController::Random();
-            $fileupload = $req->file('fileupload'); 
 
-           
+            $newId = MasterController::Random();
+            $fileupload = $req->file('fileupload');
+
+
             if ($fileupload)
             {
                 $ext = $fileupload->getClientOriginalExtension();
@@ -63,7 +63,7 @@ class ArsipBerkasController extends Controller
     }
 
     public function simpanDataBerkas( Request $req )
-    {        
+    {
         try {
             $dok = ArsipDokumen::firstOrNew(['id' =>  $req['id']]);
             $dok->id = $req['id'];
@@ -71,12 +71,14 @@ class ArsipBerkasController extends Controller
             $dok->jenis = $req['jenis'];
             $dok->id_jenispekerjaan = $req['jenispekerjaan'];
             $dok->namapekerjaan = $req['namapekerjaan'];
+            $dok->sumberdana = $req['sumberdana'];
+            $dok->carapembelian = $req['carapembelian'];
             $dok->tahunanggaran = $req['tahunanggaran'];
             $dok->id_ppk = $req['id_ppk'];
             $dok->hps = $req['hps'];
             $dok->nilaikontrak = $req['nilaikontrak'];
             $dok->save();
-            
+
             $err = "";
             $status = 1;
 
@@ -93,7 +95,7 @@ class ArsipBerkasController extends Controller
     }
 
     public function deleteUpload( Request $req )
-    {        
+    {
         try {
              DB::beginTransaction();
              $namafile = $req->filename.".".$req->ext;
@@ -119,37 +121,57 @@ class ArsipBerkasController extends Controller
             "lastinsertid" => $req->filename
         ]);
     }
- 
-    public function getBerkas( Request $req )
-    {        
+
+    public function deleteProyek( Request $req )
+    {
         try {
-            
+             ArsipDokumen::find($req->id)->update(['aktif'=> "0"]);
+            $err = "";
             $status =1;
-            $data = ArsipDokumen::get();
-            
+
+
         } catch (\Exception $e) {
             $status =0;
             $err = "[".$e->getMessage()."]";
         }
-        
+
+        return response()->json([
+            "msg"=> $status ==0 ? "Gagal simpan data...". $err :"Suksess .",
+            "sts" =>$status,
+            "lastinsertid" => $req->filename
+        ]);
+    }
+
+    public function getBerkas( Request $req )
+    {
+        try {
+
+            $status =1;
+            $data = ArsipDokumen::get();
+
+        } catch (\Exception $e) {
+            $status =0;
+            $err = "[".$e->getMessage()."]";
+        }
+
         return response()->json([
             "sts" =>$status,
             "data" => $data
         ]);
     }
- 
+
     public function getfileupload( Request $req )
-    {        
+    {
         try {
-            
+
             $status =1;
             $data = DB::table('');
-            
+
         } catch (\Exception $e) {
             $status =0;
             $err = "[".$e->getMessage()."]";
         }
-        
+
         return response()->json([
             "sts" =>$status,
             "data" => $data
@@ -164,7 +186,7 @@ class ArsipBerkasController extends Controller
         // }
 
         // return Storage::response(storage_path('app/Arsip/'.$file_name));
-        
+
         // return response()->download(storage_path('app/Arsip/'.$file_name));
 
         // $filename = "Arsip\rc-upload-1637550102490-7.pdf";
@@ -178,48 +200,52 @@ class ArsipBerkasController extends Controller
 
     }
 
- 
+
     public function showBerkasArsip( Request $req )
-    {        
+    {
       $data = DB:: table("arsip_dokumen_t as ad")
       ->join("pegawai_m as pg","pg.id","=","ad.id_ppk")
       ->join("arsip_jenispekerjaan_m as jp","jp.id","=","ad.id_jenispekerjaan")
         ->select(
-                "ad.id", "ad.aktif", "ad.created_at", "ad.jenis", "ad.id_jenispekerjaan", "ad.namapekerjaan","ad.nilaikontrak","ad.hps", "ad.id_ppk","ad.tahunanggaran",
+                "ad.id","ad.sumberdana","ad.carapembelian", "ad.aktif", "ad.created_at", "ad.jenis", "ad.id_jenispekerjaan", "ad.namapekerjaan","ad.nilaikontrak","ad.hps", "ad.id_ppk","ad.tahunanggaran",
                 "pg.namapegawai as namappk",
                 "jp.jenispekerjaan"
                 )->where("ad.aktif","1");
 
         if(isset($req->jenis) && $req->jenis != ""){
             $data = $data->where("ad.jenis",$req->jenis);
-        }   
+        }
 
         if(isset($req->tahunanggaran) && $req->tahunanggaran != ""){
             $data = $data->where("ad.tahunanggaran",$req->tahunanggaran);
-        }   
+        }
 
         if(isset($req->jenispekerjaan) && $req->jenispekerjaan != ""){
             $data = $data->where("ad.id_jenispekerjaan",$req->jenispekerjaan);
-        }   
+        }
+
+        if(isset($req->sumberdana) && $req->sumberdana != ""){
+            $data = $data->where("ad.sumberdana",$req->sumberdana);
+        }
 
         if(isset($req->namappekerjaan) && $req->namappekerjaan != ""){
             $data = $data->where("ad.namapekerjaan","like","%$req->namappekerjaan%");
-        }   
-        
+        }
+
 
         if(isset($req->id_ppk) && $req->id_ppk != ""){
             $data = $data->where("ad.id_ppk",$req->id_ppk);
-        }   
-        
+        }
+
         $data = $data->orderBy("ad.created_at","desc")->limit(50)->get();
-                
+
         return response()->json([
             "data" => $data
         ]);
     }
- 
+
     public function getdetailRegister( Request $req )
-    {        
+    {
       $data = DB:: table("arsip_arsipberkasproyek_t as arb")
       ->join("arsip_registerpengadaan_m as rg","rg.id", "arb.id_registerpengadaan")
         ->select("arb.keterangan", "rg.registerpengadaan", "arb.id_registerpengadaan")
@@ -229,7 +255,7 @@ class ArsipBerkasController extends Controller
         ->groupBy("arb.keterangan", "rg.registerpengadaan","arb.id_registerpengadaan")
         ->get();
 
-    
+
         foreach ($data as $datas) {
                 $detail = DB:: table("arsip_arsipberkasproyek_t as arb")
                 // ->select("id","filename","deskripsi","ext")
@@ -239,17 +265,17 @@ class ArsipBerkasController extends Controller
                 $datas->detail = $detail;
 
         }
- 
-                
+
+
         return response()->json([
             "data" => $data
         ]);
     }
 
-    
-   
 
- 
-    
+
+
+
+
 
 }
