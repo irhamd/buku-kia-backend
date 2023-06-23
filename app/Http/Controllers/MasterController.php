@@ -54,6 +54,15 @@ class MasterController extends Controller
         return response()->json($data);
     }
 
+    public  function getRegisterArsipPenunjang(Request $req)
+    {
+        $data =DB::table("arsip_registerpengadaan_m") //->where("aktif", false)
+        ->where("bidang_id", $req['bidang_id']);
+        $data= $data->orderBy("id")->get();
+
+        return response()->json($data);
+    }
+
     public  function nonaktifkan(Request $req)
     {
         $data =DB::table($req->masterData);

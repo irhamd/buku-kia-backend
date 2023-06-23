@@ -92,6 +92,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::delete("/deleteProyek","ArsipBerkas\ArsipBerkasController@deleteProyek");
         Route::get("/downloadBerkas","ArsipBerkas\ArsipBerkasController@downloadBerkas");
         Route::post("/getMasterData","MasterController@getMasterData");
+        Route::get("/getRegisterArsipPenunjang","MasterController@getRegisterArsipPenunjang");
         Route::get("/arsip-showBerkasArsip","ArsipBerkas\ArsipBerkasController@showBerkasArsip");
         Route::get("/arsip-getdetailRegister","ArsipBerkas\ArsipBerkasController@getdetailRegister");
         Route::post("/simpanDataBerkas","ArsipBerkas\ArsipBerkasController@simpanDataBerkas");

@@ -74,6 +74,7 @@ class ArsipBerkasController extends Controller
             $dok->sumberdana = $req['sumberdana'];
             $dok->carapembelian = $req['carapembelian'];
             $dok->tahunanggaran = $req['tahunanggaran'];
+            $dok->bidang_id = $req['bidang_id'];
             $dok->id_ppk = $req['id_ppk'];
             $dok->hps = $req['hps'];
             $dok->nilaikontrak = $req['nilaikontrak'];
@@ -205,9 +206,10 @@ class ArsipBerkasController extends Controller
     {
       $data = DB:: table("arsip_dokumen_t as ad")
       ->join("pegawai_m as pg","pg.id","=","ad.id_ppk")
+      ->leftjoin("bidang_m as bd","bd.id","=","ad.bidang_id")
       ->join("arsip_jenispekerjaan_m as jp","jp.id","=","ad.id_jenispekerjaan")
         ->select(
-                "ad.id","ad.sumberdana","ad.carapembelian", "ad.aktif", "ad.created_at", "ad.jenis", "ad.id_jenispekerjaan", "ad.namapekerjaan","ad.nilaikontrak","ad.hps", "ad.id_ppk","ad.tahunanggaran",
+                "ad.id","ad.bidang_id","bd.bidang","ad.sumberdana","ad.carapembelian", "ad.aktif", "ad.created_at", "ad.jenis", "ad.id_jenispekerjaan", "ad.namapekerjaan","ad.nilaikontrak","ad.hps", "ad.id_ppk","ad.tahunanggaran",
                 "pg.namapegawai as namappk",
                 "jp.jenispekerjaan"
                 )->where("ad.aktif","1");
