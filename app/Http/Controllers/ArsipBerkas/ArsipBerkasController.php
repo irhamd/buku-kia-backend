@@ -70,11 +70,17 @@ class ArsipBerkasController extends Controller
             $dok->aktif = "1";
             $dok->jenis = $req['jenis'];
             $dok->id_jenispekerjaan = $req['jenispekerjaan'];
+            $dok->tanggal = date('Y-m-d');
             $dok->namapekerjaan = $req['namapekerjaan'];
             $dok->sumberdana = $req['sumberdana'];
             $dok->carapembelian = $req['carapembelian'];
             $dok->tahunanggaran = $req['tahunanggaran'];
-            $dok->bidang_id = $req['bidang_id'];
+            if($req['id_jenisarsip'] != null && $req['id_jenisarsip'] !=""){
+                $dok->id_jenisarsip = $req['id_jenisarsip'] ; // 2 nakes lainnya
+            } else{
+                $dok->id_jenisarsip = "10" ; // 10 nakes lainnya
+            }
+            // $dok->id_jenisarsip = $req['id_jenisarsip'];
             $dok->id_ppk = $req['id_ppk'];
             $dok->hps = $req['hps'];
             $dok->nilaikontrak = $req['nilaikontrak'];
@@ -205,17 +211,21 @@ class ArsipBerkasController extends Controller
     public function showBerkasArsip( Request $req )
     {
       $data = DB:: table("arsip_dokumen_t as ad")
-      ->join("pegawai_m as pg","pg.id","=","ad.id_ppk")
-      ->leftjoin("bidang_m as bd","bd.id","=","ad.bidang_id")
-      ->join("arsip_jenispekerjaan_m as jp","jp.id","=","ad.id_jenispekerjaan")
+      ->leftjoin("pegawai_m as pg","pg.id","=","ad.id_ppk")
+      ->leftjoin("jenisarsip_m as ja","ja.id","=","ad.id_jenisarsip")
+      ->leftjoin("bidang_m as bd","bd.id","=","ja.bidang_id")
+      ->leftjoin("arsip_jenispekerjaan_m as jp","jp.id","=","ad.id_jenispekerjaan")
         ->select(
-                "ad.id","ad.bidang_id","bd.bidang","ad.sumberdana","ad.carapembelian", "ad.aktif", "ad.created_at", "ad.jenis", "ad.id_jenispekerjaan", "ad.namapekerjaan","ad.nilaikontrak","ad.hps", "ad.id_ppk","ad.tahunanggaran",
+                "ad.id","ad.id_jenisarsip","ja.jenisarsip","ad.tanggal","ja.bidang_id","bd.bidang","ad.sumberdana","ad.carapembelian", "ad.aktif", "ad.created_at", "ad.jenis", "ad.id_jenispekerjaan", "ad.namapekerjaan","ad.nilaikontrak","ad.hps", "ad.id_ppk","ad.tahunanggaran",
                 "pg.namapegawai as namappk",
                 "jp.jenispekerjaan"
                 )->where("ad.aktif","1");
 
         if(isset($req->jenis) && $req->jenis != ""){
             $data = $data->where("ad.jenis",$req->jenis);
+        }
+        if(isset($req->tglawal) && $req->tglawal != "" && $req->tglawal != "Invalid date" ){
+            $data = $data->whereRaw(" ad.tanggal between  '$req->tglawal 00:00:00' and  '$req->tglakhir 23:59:59'");
         }
 
         if(isset($req->tahunanggaran) && $req->tahunanggaran != ""){
@@ -239,7 +249,7 @@ class ArsipBerkasController extends Controller
             $data = $data->where("ad.id_ppk",$req->id_ppk);
         }
 
-        $data = $data->orderBy("ad.created_at","desc")->limit(50)->get();
+        $data = $data->orderBy("ad.created_at","desc")->limit(100)->get();
 
         return response()->json([
             "data" => $data
