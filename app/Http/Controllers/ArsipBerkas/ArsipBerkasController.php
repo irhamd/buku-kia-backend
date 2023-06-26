@@ -231,6 +231,9 @@ class ArsipBerkasController extends Controller
         if(isset($req->tahunanggaran) && $req->tahunanggaran != ""){
             $data = $data->where("ad.tahunanggaran",$req->tahunanggaran);
         }
+        if(isset($req->jenisarsip) && $req->jenisarsip != ""){
+            $data = $data->where("ad.id_jenisarsip",$req->jenisarsip);
+        }
 
         if(isset($req->jenispekerjaan) && $req->jenispekerjaan != ""){
             $data = $data->where("ad.id_jenispekerjaan",$req->jenispekerjaan);
