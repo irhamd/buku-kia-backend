@@ -18,7 +18,9 @@ class PengaduanSimrsController extends Controller
         $newId = MasterController::Random1();
         try {
             if( $req['id'] =='' ){
+                $idd =  PengaduanSimrs::max("id") + 1;
                 $save = new PengaduanSimrs();
+                $save->id = $idd;
                 $save->aktif = 1;
                 $save->progres = 'rq';
                 $save->nomorpengaduan = isset($req['nomorpengaduan']) ? $req['nomorpengaduan'] : $newId;
